@@ -20,7 +20,10 @@ RUN npm prune
 # Run
 FROM base
 
-ENV PORT=$PORT
+# Changes the server port
+ENV PORT=$PORT 
+
+EXPOSE $PORT
 
 COPY --from=build /src/.output /src/.output
 # Optional, only needed if you rely on unbundled dependencies

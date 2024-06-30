@@ -40,7 +40,9 @@ const clientId = useState<string>();
 
 const clientSecret = useState<string>();
 
-const callbackAddress = "http://localhost:3000/api/callback";
+const callbackAddress = import.meta.client
+  ? `${window.location.origin}/api/callback`
+  : "";
 
 const hostedUiAddress = computed(() => {
   // TODO add regex
