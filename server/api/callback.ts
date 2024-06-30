@@ -1,5 +1,4 @@
 import type { TokensDto } from "~/types/tokens";
-import toBase64 from "~/utils/toBase64";
 
 export default defineEventHandler(async (event) => {
   const { grantType, clientId, clientSecret, tokenAddress } = (global as any)
