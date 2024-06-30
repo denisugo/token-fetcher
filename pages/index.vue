@@ -1,16 +1,5 @@
 <script setup lang="ts">
-// const resolver = (val: number) => {
-//     if (val % 2 === 0)
-//         return "Even"
-//     return "Odd"
-// }
-// const { data } = await useFetch('/api/hello')
-// const counter = useState('counter', () => Math.round(Math.random() * 1000))
-
-// const info = useState('info', () => resolver(counter.value))
-// const increment = () => counter.value++
-
-const router = useRouter();
+// const router = useRouter();
 
 type IdentityPorvider = "AWS Cognito";
 const identityProviders: IdentityPorvider[] = [
@@ -60,8 +49,11 @@ const hostedUiAddress = computed(() => {
       url.searchParams.set("redirect_url", callbackAddress);
       url.searchParams.set("scope", scope.value);
       return url.href;
-    } catch {}
+    } catch {
+      return null;
+    }
   }
+  return null;
 });
 // TODO uncomment
 // watch([identityPorvider, grantType, scope], (newVal) => {
