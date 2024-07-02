@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { CredentialsDTO } from "~/types/credentials";
+
 // const router = useRouter();
 
 type IdentityPorvider = "AWS Cognito";
@@ -21,32 +23,34 @@ const responseTypes: ResponseType[] = ["code" /*, "token"*/];
 
 const scope = useState<string>(() => "openid");
 
-const authAddress = useState<string>();
+const authUri = useState<string>();
 
-const tokenAddress = useState<string>();
+const tokenUri = useState<string>();
 
 const clientId = useState<string>();
 
 const clientSecret = useState<string>();
 
-const callbackAddress = import.meta.client
+const callbackUri = import.meta.client
   ? `${window.location.origin}/api/callback`
   : "";
 
-const hostedUiAddress = computed(() => {
+const identityProviderUri = computed(() => {
   // TODO add regex
   // TODO check if all params a filled out
   if (
-    authAddress.value &&
+    authUri.value &&
+    tokenUri.value &&
     responseType.value &&
     clientId.value &&
+    clientSecret.value &&
     scope.value
   ) {
     try {
-      const url = new URL(authAddress.value);
+      const url = new URL(authUri.value);
       url.searchParams.set("response_type", responseType.value);
       url.searchParams.set("client_id", clientId.value);
-      url.searchParams.set("redirect_url", callbackAddress);
+      url.searchParams.set("redirect_uri", callbackUri);
       url.searchParams.set("scope", scope.value);
       return url.href;
     } catch {
@@ -65,20 +69,22 @@ const hostedUiAddress = computed(() => {
 const loading = useState<boolean>(() => false);
 async function saveAuthData() {
   loading.value = true;
+  const body: CredentialsDTO = {
+    clientId: clientId.value,
+    clientSecret: clientSecret.value,
+    grantType: grantType.value.toLowerCase().replace(" ", "_"),
+    tokenUri: tokenUri.value,
+    callbackUri,
+  };
   await $fetch("/api/credentials", {
     method: "POST",
-    body: {
-      clientId: clientId.value,
-      clientSecret: clientSecret.value,
-      grantType: grantType.value.toLowerCase().replace(" ", "_"),
-      tokenAddress: tokenAddress.value,
-    },
+    body,
   });
   loading.value = false;
 }
 async function submit() {
   await saveAuthData();
-  navigateTo(hostedUiAddress.value, { external: true });
+  navigateTo(identityProviderUri.value, { external: true });
 }
 </script>
 
@@ -114,7 +120,7 @@ async function submit() {
     </div>
     <div class="flex flex-column gap-2">
       <label for="calback-url">callback url</label>
-      <InputText id="calback-url" v-model="callbackAddress" disabled />
+      <InputText id="calback-url" v-model="callbackUri" disabled />
     </div>
     <div class="flex flex-column gap-2">
       <label for="scope">scope</label>
@@ -122,11 +128,11 @@ async function submit() {
     </div>
     <div class="flex flex-column gap-2">
       <label for="auth-url">auth url</label>
-      <InputText id="auth-url" v-model="authAddress" />
+      <InputText id="auth-url" v-model="authUri" />
     </div>
     <div class="flex flex-column gap-2">
       <label for="token-url">token url</label>
-      <InputText id="token-url" v-model="tokenAddress" />
+      <InputText id="token-url" v-model="tokenUri" />
     </div>
     <div class="flex flex-column gap-2">
       <label for="client-id">client id</label>
@@ -142,7 +148,7 @@ async function submit() {
         icon="pi pi-check"
         aria-label="Submit"
         label="go"
-        :disabled="!hostedUiAddress"
+        :disabled="!identityProviderUri || loading"
         @click="submit"
       />
     </div>
