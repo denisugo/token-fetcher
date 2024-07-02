@@ -90,6 +90,7 @@ async function submit() {
 
 <template>
   <div class="flex flex-column row-gap-4 w-full md:w-18rem">
+    <ProgressBar v-if="loading" mode="indeterminate" style="height: 6px" />
     <div class="flex flex-column gap-2">
       <label for="identity-prorvider">identity prorvider</label>
       <Dropdown
