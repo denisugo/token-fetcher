@@ -17,13 +17,20 @@ export default defineEventHandler(async (event) => {
   urlencoded.append("redirect_uri", callbackUri!);
   urlencoded.append("code", code);
 
-  const tokens: TokensDto = await $fetch(tokenUri, {
-    method: "POST",
-    headers,
-    body: urlencoded,
-  });
+  console.log(urlencoded);
 
-  await useStorage("data").setItem("tokens", tokens);
+  let tokens: TokensDto | null = null;
+  try {
+    tokens = await $fetch(tokenUri!, {
+      method: "POST",
+      headers,
+      body: urlencoded,
+    });
+  } catch (e) {
+    console.log(e);
+    // TODO catch the error
+  }
+  if (tokens) await useStorage("data").setItem("tokens", tokens);
 
   await sendRedirect(event, "/tokens");
 });
