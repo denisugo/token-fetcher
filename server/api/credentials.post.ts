@@ -9,5 +9,5 @@ export default defineEventHandler(async (event) => {
     tokenUri: body.tokenUri,
     callbackUri: body.callbackUri,
   };
-  (global as any).credentials = credentials;
+  await useStorage("data").setItem("credentials", credentials);
 });

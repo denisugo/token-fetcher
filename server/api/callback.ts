@@ -2,9 +2,8 @@ import type { CredentialsDTO } from "~/types/credentials";
 import type { TokensDto } from "~/types/tokens";
 
 export default defineEventHandler(async (event) => {
-  const { grantType, clientId, clientSecret, tokenUri, callbackUri } = (
-    global as any
-  ).credentials as CredentialsDTO;
+  const { grantType, clientId, clientSecret, tokenUri, callbackUri } =
+    (await useStorage("data").getItem<CredentialsDTO>("credentials"))!;
 
   const { code } = getQuery<{ code: string }>(event);
 
@@ -24,7 +23,7 @@ export default defineEventHandler(async (event) => {
     body: urlencoded,
   });
 
-  (global as any).tokens = tokens;
+  await useStorage("data").setItem("tokens", tokens);
 
   await sendRedirect(event, "/tokens");
 });
