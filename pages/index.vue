@@ -1,35 +1,43 @@
 <script setup lang="ts">
-import type { CredentialsDTO } from "~/types/credentials";
+import type {
+  CredentialsDTO,
+  GrantType,
+  IdentityPorvider,
+  ResponseType,
+} from "~/types/credentials";
 
 // const router = useRouter();
-
-type IdentityPorvider = "AWS Cognito";
+const { data: initialValues } = await useFetch("/api/credentials");
 const identityProviders: IdentityPorvider[] = [
   "AWS Cognito" /*, "Okta", "Google"*/,
 ];
 const identityPorvider = useState<IdentityPorvider>(
-  () => "AWS Cognito" as IdentityPorvider,
+  () => initialValues.value?.identityPorvider ?? "AWS Cognito",
 );
 
-type GrantType = "Authorization Code" | "Implicit" | "Client Credentials";
-const grantType = useState<GrantType>(() => "Authorization Code" as GrantType);
+const grantType = useState<GrantType>(
+  () => initialValues.value?.grantType ?? ("Authorization Code" as GrantType),
+);
 const grantTypes: GrantType[] = [
   "Authorization Code" /*, "Implicit", "Client Credentials"*/,
 ];
 
-type ResponseType = "code" | "token";
-const responseType = useState<ResponseType>(() => "code" as ResponseType);
+const responseType = useState<ResponseType>(
+  () => initialValues.value?.responseType ?? ("code" as ResponseType),
+);
 const responseTypes: ResponseType[] = ["code" /*, "token"*/];
 
-const scope = useState<string>(() => "openid");
+const scope = useState<string>(() => initialValues.value?.scope ?? "openid");
 
-const authUri = useState<string>();
+const authUri = useState<string>(() => initialValues.value?.authUri ?? "");
 
-const tokenUri = useState<string>();
+const tokenUri = useState<string>(() => initialValues.value?.tokenUri ?? "");
 
-const clientId = useState<string>();
+const clientId = useState<string>(() => initialValues.value?.clientId ?? "");
 
-const clientSecret = useState<string>();
+const clientSecret = useState<string>(
+  () => initialValues.value?.clientSecret ?? "",
+);
 
 const url = useRequestURL();
 const callbackUri = `${url.protocol}//${url.host}/api/callback`;
@@ -71,9 +79,12 @@ async function saveAuthData() {
   const body: CredentialsDTO = {
     clientId: clientId.value,
     clientSecret: clientSecret.value,
-    grantType: grantType.value.toLowerCase().replace(" ", "_"),
+    grantType: grantType.value,
     tokenUri: tokenUri.value,
+    authUri: authUri.value,
+    scope: scope.value,
     callbackUri,
+    responseType: responseType.value,
   };
   await $fetch("/api/credentials", {
     method: "POST",
