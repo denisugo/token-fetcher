@@ -31,9 +31,8 @@ const clientId = useState<string>();
 
 const clientSecret = useState<string>();
 
-const callbackUri = import.meta.client
-  ? `${window.location.origin}/api/callback`
-  : "";
+const url = useRequestURL();
+const callbackUri = `${url.protocol}//${url.host}/api/callback`;
 
 const identityProviderUri = computed(() => {
   // TODO add regex
