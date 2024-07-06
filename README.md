@@ -4,7 +4,7 @@
 This is a pre-alpha version.
 
 ### Description
-This app fetches access_token, id_token, and refresh_token for further processing/attribute check.
+This app fetches OAuth 2.0 access_token, id_token, and refresh_token for further processing/attribute check.
 
 ### Goals
 The project aims to simplify the entire token obtaining process providing a user with a simple UI.
