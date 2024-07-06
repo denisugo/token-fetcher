@@ -25,10 +25,12 @@ export default defineEventHandler(async (event) => {
         headers,
         body: urlencoded,
       });
-    await sendRedirect(
-      event,
-      `/tokens?accessToken=${access_token}&idToken=${id_token}&refreshToken=${refresh_token}`,
-    );
+    const queryBuilder = [];
+    access_token && queryBuilder.push(`accessToken=${access_token}`);
+    id_token && queryBuilder.push(`idToken=${id_token}`);
+    refresh_token && queryBuilder.push(`refreshToken=${refresh_token}`);
+
+    await sendRedirect(event, `/tokens?${queryBuilder.join("&")}`);
   } catch (e) {
     const data: ErrorData = { originalErrorMessage: (e as Error).message };
     throw createError({
