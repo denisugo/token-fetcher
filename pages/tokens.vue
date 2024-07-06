@@ -1,10 +1,11 @@
 <script setup lang="ts">
-const { data: tokens } = await useFetch("/api/tokens");
-const accessToken = computed(() => tokens.value?.access_token);
-const idToken = computed(() => tokens.value?.id_token);
-const refreshToken = computed(() => tokens.value?.refresh_token);
-// const tokenType = computed(() => tokens.value?.token_type);
-// const expires = computed(() => tokens.value?.expires_in);
+import type { TokensQueryDto } from "~/types/tokens";
+
+const { query }: { query: TokensQueryDto } = useRoute();
+
+const accessToken = computed(() => query.accessToken);
+const idToken = computed(() => query.idToken);
+const refreshToken = computed(() => query.refreshToken);
 </script>
 <template>
   <div>

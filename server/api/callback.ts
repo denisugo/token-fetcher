@@ -1,5 +1,5 @@
 import type { CredentialsDTO } from "~/types/credentials";
-import type { TokensDto } from "~/types/tokens";
+import type { TokensResponseDto } from "~/types/tokens";
 
 export default defineEventHandler(async (event) => {
   const { grantType, clientId, clientSecret, tokenUri, callbackUri } =
@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
 
   console.log(urlencoded);
 
-  let tokens: TokensDto | null = null;
+  let tokens: TokensResponseDto | null = null;
   try {
     tokens = await $fetch(tokenUri!, {
       method: "POST",
@@ -30,7 +30,11 @@ export default defineEventHandler(async (event) => {
     console.log(e);
     // TODO catch the error
   }
-  if (tokens) await useStorage("data").setItem("tokens", tokens);
 
-  await sendRedirect(event, "/tokens");
+  // if (tokens) await useStorage("data").setItem("tokens", tokens);
+
+  await sendRedirect(
+    event,
+    `/tokens?accessToken=${tokens?.access_token}&idToken=${tokens?.id_token}&refreshToken=${tokens?.refresh_token}`,
+  );
 });
