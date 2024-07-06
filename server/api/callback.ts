@@ -1,4 +1,5 @@
 import type { CredentialsDTO } from "~/types/credentials";
+import type { ErrorData } from "~/types/error";
 import type { TokensResponseDto } from "~/types/tokens";
 
 export default defineEventHandler(async (event) => {
@@ -17,24 +18,23 @@ export default defineEventHandler(async (event) => {
   urlencoded.append("redirect_uri", callbackUri!);
   urlencoded.append("code", code);
 
-  console.log(urlencoded);
-
-  let tokens: TokensResponseDto | null = null;
   try {
-    tokens = await $fetch(tokenUri!, {
-      method: "POST",
-      headers,
-      body: urlencoded,
-    });
+    const { access_token, id_token, refresh_token }: TokensResponseDto =
+      await $fetch(tokenUri!, {
+        method: "POST",
+        headers,
+        body: urlencoded,
+      });
+    await sendRedirect(
+      event,
+      `/tokens?accessToken=${access_token}&idToken=${id_token}&refreshToken=${refresh_token}`,
+    );
   } catch (e) {
-    console.log(e);
-    // TODO catch the error
+    const data: ErrorData = { originalErrorMessage: (e as Error).message };
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Unable to fetch tokens",
+      data,
+    });
   }
-
-  // if (tokens) await useStorage("data").setItem("tokens", tokens);
-
-  await sendRedirect(
-    event,
-    `/tokens?accessToken=${tokens?.access_token}&idToken=${tokens?.id_token}&refreshToken=${tokens?.refresh_token}`,
-  );
 });
