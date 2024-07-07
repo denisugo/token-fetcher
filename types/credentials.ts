@@ -9,3 +9,10 @@ export interface AuthorizationCodeCredentialsDTO {
 }
 
 export type ResponseType = "code" | "token";
+
+export interface RefreshTokenCredentialsDto {
+  refreshToken?: string;
+  tokenUri?: string;
+  clientId?: string;
+  clientSecret?: string;
+}
