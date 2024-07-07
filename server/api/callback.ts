@@ -1,6 +1,7 @@
 import type { AuthorizationCodeCredentialsDTO } from "~/types/credentials";
 import type { ErrorData } from "~/types/error";
 import type { TokensResponseDto } from "~/types/tokens";
+import toBase64 from "~/utils/toBase64";
 
 export default defineEventHandler(async (event) => {
   const { clientId, clientSecret, tokenUri, callbackUri } = (await useStorage(
