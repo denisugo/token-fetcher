@@ -1,26 +1,13 @@
 <script setup lang="ts">
 import type {
-  CredentialsDTO,
-  GrantType,
-  IdentityPorvider,
+  AuthorizationCodeCredentialsDTO,
   ResponseType,
 } from "~/types/credentials";
 
 // const router = useRouter();
-const { data: initialValues } = await useFetch("/api/credentials");
-const identityProviders: IdentityPorvider[] = [
-  "AWS Cognito" /*, "Okta", "Google"*/,
-];
-const identityPorvider = useState<IdentityPorvider>(
-  () => initialValues.value?.identityPorvider ?? "AWS Cognito",
+const { data: initialValues } = await useFetch(
+  "/api/authorization-code-credentials",
 );
-
-const grantType = useState<GrantType>(
-  () => initialValues.value?.grantType ?? ("Authorization Code" as GrantType),
-);
-const grantTypes: GrantType[] = [
-  "Authorization Code" /*, "Implicit", "Client Credentials"*/,
-];
 
 const responseType = useState<ResponseType>(
   () => initialValues.value?.responseType ?? ("code" as ResponseType),
@@ -76,17 +63,16 @@ const identityProviderUri = computed(() => {
 const loading = useState<boolean>(() => false);
 async function saveAuthData() {
   loading.value = true;
-  const body: CredentialsDTO = {
+  const body: AuthorizationCodeCredentialsDTO = {
     clientId: clientId.value,
     clientSecret: clientSecret.value,
-    grantType: grantType.value,
     tokenUri: tokenUri.value,
     authUri: authUri.value,
     scope: scope.value,
     callbackUri,
     responseType: responseType.value,
   };
-  await $fetch("/api/credentials", {
+  await $fetch("/api/authorization-code-credentials", {
     method: "POST",
     body,
   });
@@ -99,29 +85,16 @@ async function submit() {
 </script>
 
 <template>
-  <div class="flex flex-column row-gap-4 w-full md:w-18rem">
-    <ProgressBar v-if="loading" mode="indeterminate" style="height: 6px" />
-    <div class="flex flex-column gap-2">
-      <label for="identity-prorvider">identity prorvider</label>
-      <Dropdown
-        id="identity-prorvider"
-        v-model="identityPorvider"
-        :options="identityProviders"
-        placeholder="Select an identity provider"
-      />
-    </div>
+  <div class="flex flex-column align-items-center row-gap-4 w-full md:w-18rem">
+    <h1 class="text-xl">Authorization Code</h1>
 
-    <div class="flex flex-column gap-2">
-      <label for="grant-type">grant type</label>
-      <Dropdown
-        id="grant-type"
-        v-model="grantType"
-        :options="grantTypes"
-        placeholder="Select a grand type"
-      />
-    </div>
-    <div class="flex flex-column gap-2">
-      <label for="response-type">response type</label>
+    <ProgressBar v-if="loading" mode="indeterminate" style="height: 6px" />
+
+    <div class="flex flex-column gap-2 w-full">
+      <label for="response-type"
+        ><Image src="/icons/under-construction.png" width="15" height="15" />
+        response type</label
+      >
       <Dropdown
         id="response-type"
         v-model="responseType"
@@ -129,42 +102,43 @@ async function submit() {
         placeholder="Select a grand type"
       />
     </div>
-    <div class="flex flex-column gap-2">
-      <label for="calback-url">callback url</label>
+    <div class="flex flex-column gap-2 w-full">
+      <label for="calback-url"
+        ><Image src="/icons/under-construction.png" width="15" height="15" />
+        callback url</label
+      >
       <InputText id="calback-url" v-model="callbackUri" disabled />
     </div>
-    <div class="flex flex-column gap-2">
+    <div class="flex flex-column gap-2 w-full">
       <label for="scope">scope</label>
       <InputText id="scope" v-model="scope" />
     </div>
-    <div class="flex flex-column gap-2">
+    <div class="flex flex-column gap-2 w-full">
       <label for="auth-url">auth url</label>
       <InputText id="auth-url" v-model="authUri" />
     </div>
-    <div class="flex flex-column gap-2">
+    <div class="flex flex-column gap-2 w-full">
       <label for="token-url">token url</label>
       <InputText id="token-url" v-model="tokenUri" />
     </div>
-    <div class="flex flex-column gap-2">
+    <div class="flex flex-column gap-2 w-full">
       <label for="client-id">client id</label>
       <InputText id="client-id" v-model="clientId" />
     </div>
-    <div class="flex flex-column gap-2">
+    <div class="flex flex-column gap-2 w-full">
       <label for="client-secret">client secret</label>
       <InputText id="client-secret" v-model="clientSecret" />
     </div>
 
-    <div class="align-self-center">
-      <div class="flex align-items-center justify-content-center w-full gap-2">
-        <NuxtLink to="/"><Button label="Go Back" link /></NuxtLink>
-        <Button
-          icon="pi pi-check"
-          aria-label="Submit"
-          label="Fetch"
-          :disabled="!identityProviderUri || loading"
-          @click="submit"
-        />
-      </div>
+    <div class="flex align-items-center justify-content-center w-full gap-2">
+      <NuxtLink to="/"><Button label="Go Back" link /></NuxtLink>
+      <Button
+        icon="pi pi-check"
+        aria-label="Submit"
+        label="Fetch"
+        :disabled="!identityProviderUri || loading"
+        @click="submit"
+      />
     </div>
   </div>
 </template>

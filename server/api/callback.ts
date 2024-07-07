@@ -1,10 +1,13 @@
-import type { CredentialsDTO } from "~/types/credentials";
+import type { AuthorizationCodeCredentialsDTO } from "~/types/credentials";
 import type { ErrorData } from "~/types/error";
 import type { TokensResponseDto } from "~/types/tokens";
 
 export default defineEventHandler(async (event) => {
-  const { grantType, clientId, clientSecret, tokenUri, callbackUri } =
-    (await useStorage("data").getItem<CredentialsDTO>("credentials"))!;
+  const { clientId, clientSecret, tokenUri, callbackUri } = (await useStorage(
+    "data",
+  ).getItem<AuthorizationCodeCredentialsDTO>(
+    "credentials-authorization-code",
+  ))!;
 
   const { code } = getQuery<{ code: string }>(event);
 
@@ -14,7 +17,7 @@ export default defineEventHandler(async (event) => {
   headers.append("Content-Type", "application/x-www-form-urlencoded");
 
   const urlencoded = new URLSearchParams();
-  urlencoded.append("grant_type", grantType!.toLowerCase().replace(" ", "_"));
+  urlencoded.append("grant_type", "authorization_code");
   urlencoded.append("redirect_uri", callbackUri!);
   urlencoded.append("code", code);
 
