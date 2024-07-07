@@ -15,3 +15,4 @@ The project aims to simplify the entire token obtaining process providing a user
 
 ### Credits
 Favicon Icon - https://www.flaticon.com/free-icons/keychain
+Under Construction Icon - https://www.flaticon.com/free-icons/under-construction
