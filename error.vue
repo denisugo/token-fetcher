@@ -9,7 +9,7 @@ const { error } = defineProps<{ error: NuxtError }>();
   <div>
     <h1>{{ error.statusCode }}</h1>
     <h2>{{ error.message }}</h2>
-    <p>
+    <p v-if="error.data">
       {{ (JSON.parse(error.data as string) as ErrorData).originalErrorMessage }}
     </p>
     <NuxtLink to="/">Go back home</NuxtLink>
