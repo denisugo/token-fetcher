@@ -62,13 +62,7 @@ const refreshToken = computed(() => query.refreshToken);
       <JwtIoRedirectButton :token="refreshToken" />
     </div>
     <div class="flex flex-column gap-2 align-items-center">
-      <Button
-        icon="pi pi-arrow-left"
-        severity="secondary"
-        aria-label="Submit"
-        label="back"
-        @click="navigateTo('/')"
-      />
+      <NuxtLink to="/"><Button label="Go Back" link /></NuxtLink>
     </div>
   </div>
 </template>
