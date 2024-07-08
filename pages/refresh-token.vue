@@ -37,7 +37,7 @@ const identityProviderUri = computed(() => {
 async function callIdentityProviderEndpoint() {
   loading.value = true;
 
-  const authorization = toBase64(`${clientId}:${clientSecret}`);
+  const authorization = toBase64(`${clientId.value}:${clientSecret.value}`);
   const headers = new Headers();
   headers.append("Authorization", `Basic ${authorization}`);
   headers.append("Content-Type", "application/x-www-form-urlencoded");
