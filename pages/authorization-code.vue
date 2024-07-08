@@ -88,8 +88,6 @@ async function submit() {
   <div class="flex flex-column align-items-center row-gap-4 w-full md:w-18rem">
     <h1 class="text-xl">Authorization Code</h1>
 
-    <ProgressBar v-if="loading" mode="indeterminate" style="height: 6px" />
-
     <div class="flex flex-column gap-2 w-full">
       <label for="response-type"
         ><Image src="/icons/under-construction.png" width="15" height="15" />
@@ -135,6 +133,7 @@ async function submit() {
       <Button
         icon="pi pi-check"
         aria-label="Submit"
+        :loading="loading"
         label="Fetch"
         :disabled="!identityProviderUri || loading"
         @click="submit"

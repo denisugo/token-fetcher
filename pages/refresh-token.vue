@@ -77,8 +77,6 @@ async function submit() {
     <Toast />
     <h1 class="text-xl">Refresh Token</h1>
 
-    <!-- <ProgressBar v-if="loading" mode="indeterminate" style="height: 6px" /> -->
-
     <div class="flex flex-column gap-2 w-full">
       <label for="refresh-token">refresh token</label>
       <InputText id="refresh-token" v-model="refreshToken" />
@@ -101,6 +99,7 @@ async function submit() {
       <Button
         icon="pi pi-check"
         aria-label="Submit"
+        :loading="loading"
         label="Fetch"
         :disabled="!identityProviderUri || loading"
         @click="submit"
