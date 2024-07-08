@@ -107,7 +107,7 @@ async function submit() {
         ><Image src="/icons/under-construction.png" width="15" height="15" />
         callback url</label
       >
-      <InputText id="calback-url" v-model="callbackUri" disabled />
+      <InputText id="calback-url" :value="callbackUri" disabled />
     </div>
     <div class="flex flex-column gap-2 w-full">
       <label for="scope">scope</label>
