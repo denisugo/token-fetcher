@@ -37,15 +37,14 @@ const identityProviderUri = computed(() => {
     tokenUri.value &&
     responseType.value &&
     clientId.value &&
-    clientSecret.value &&
-    scope.value
+    clientSecret.value
   ) {
     try {
       const url = new URL(authUri.value);
       url.searchParams.set("response_type", responseType.value);
       url.searchParams.set("client_id", clientId.value);
       url.searchParams.set("redirect_uri", callbackUri);
-      url.searchParams.set("scope", scope.value);
+      scope.value && url.searchParams.set("scope", scope.value);
       return url.href;
     } catch {
       return null;
