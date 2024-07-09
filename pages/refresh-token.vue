@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useToast } from "primevue/usetoast";
+import type { RefreshTokenCredentialsDto } from "~/types/credentials";
 import type { TokensResponseDto } from "~/types/tokens";
 const toast = useToast();
 
@@ -12,11 +13,19 @@ function showError(detail: string) {
   });
 }
 
-const refreshToken = useState<string>(() => "");
-const tokenUri = useState<string>(() => "");
-const clientId = useState<string>(() => "");
-const clientSecret = useState<string>(() => "");
-const loading = useState<boolean>(() => false);
+const { data: initialValues } = await useFetch(
+  "/api/refresh-token-credentials",
+);
+
+const refreshToken = useState<string>(
+  () => initialValues.value?.refreshToken ?? "",
+);
+const tokenUri = useState<string>(() => initialValues.value?.tokenUri ?? "");
+const clientId = useState<string>(() => initialValues.value?.clientId ?? "");
+const clientSecret = useState<string>(
+  () => initialValues.value?.clientSecret ?? "",
+);
+
 const identityProviderUri = computed(() => {
   if (
     tokenUri.value &&
@@ -35,8 +44,6 @@ const identityProviderUri = computed(() => {
 });
 
 async function callIdentityProviderEndpoint() {
-  loading.value = true;
-
   const authorization = toBase64(`${clientId.value}:${clientSecret.value}`);
   const headers = new Headers();
   headers.append("Authorization", `Basic ${authorization}`);
@@ -64,12 +71,26 @@ async function callIdentityProviderEndpoint() {
   } catch (e) {
     showError((e as Error).message);
   }
-  loading.value = false;
+}
+async function saveCredentials() {
+  const body: RefreshTokenCredentialsDto = {
+    clientId: clientId.value,
+    clientSecret: clientSecret.value,
+    tokenUri: tokenUri.value,
+    refreshToken: refreshToken.value,
+  };
+  await $fetch("/api/refresh-token-credentials", {
+    method: "POST",
+    body,
+  }); // assumed reliable enough to add a try-catch
 }
 
+const loading = useState<boolean>(() => false);
 async function submit() {
-  //saveCredentilas
+  loading.value = true;
+  await saveCredentials();
   await callIdentityProviderEndpoint();
+  loading.value = false;
 }
 </script>
 <template>
