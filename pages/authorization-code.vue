@@ -60,7 +60,7 @@ const identityProviderUri = computed(() => {
 //     })
 // }, {})
 const loading = useState<boolean>(() => false);
-async function saveAuthData() {
+async function saveCredentials() {
   loading.value = true;
   const body: AuthorizationCodeCredentialsDTO = {
     clientId: clientId.value,
@@ -78,7 +78,7 @@ async function saveAuthData() {
   loading.value = false;
 }
 async function submit() {
-  await saveAuthData();
+  await saveCredentials();
   navigateTo(identityProviderUri.value, { external: true });
 }
 </script>
