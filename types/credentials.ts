@@ -1,4 +1,4 @@
-export interface AuthorizationCodeCredentialsDTO {
+export interface AuthorizationCodeCredentialsDto {
   clientId?: string;
   clientSecret?: string;
   responseType?: ResponseType;

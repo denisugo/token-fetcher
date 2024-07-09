@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {
-  AuthorizationCodeCredentialsDTO,
+  AuthorizationCodeCredentialsDto,
   ResponseType,
 } from "~/types/credentials";
 
@@ -62,7 +62,7 @@ const identityProviderUri = computed(() => {
 const loading = useState<boolean>(() => false);
 async function saveCredentials() {
   loading.value = true;
-  const body: AuthorizationCodeCredentialsDTO = {
+  const body: AuthorizationCodeCredentialsDto = {
     clientId: clientId.value,
     clientSecret: clientSecret.value,
     tokenUri: tokenUri.value,

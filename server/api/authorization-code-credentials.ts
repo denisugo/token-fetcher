@@ -1,8 +1,8 @@
-import type { AuthorizationCodeCredentialsDTO } from "~/types/credentials";
+import type { AuthorizationCodeCredentialsDto } from "~/types/credentials";
 
 export default defineEventHandler(async () => {
   return (
-    (await useStorage("data").getItem<AuthorizationCodeCredentialsDTO>(
+    (await useStorage("data").getItem<AuthorizationCodeCredentialsDto>(
       "credentials-authorization-code",
     )) ?? {}
   );
