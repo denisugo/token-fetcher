@@ -16,7 +16,8 @@ The app currently supports the following flows:
 
 ### Instructions
 1. Run `docker build -t token-fetcher .`
-2. Run `docker run --rm -p "3333:3333" --name token-fetcher-container token-fetcher`
+2. Run `docker run --rm -p "3333:3333" -v ${PWD}/.data:/src/.data --name token-fetcher-container token-fetcher`.
+
 3. If you like this project, consider giving it a ⭐️
 
 ### Credits
