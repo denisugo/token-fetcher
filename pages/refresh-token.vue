@@ -48,12 +48,9 @@ async function callIdentityProviderEndpoint() {
         timeout: 3000,
       });
 
-    const queryBuilder = [];
-    access_token && queryBuilder.push(`accessToken=${access_token}`);
-    id_token && queryBuilder.push(`idToken=${id_token}`);
-    refresh_token && queryBuilder.push(`refreshToken=${refresh_token}`);
-
-    await navigateTo(`/tokens?${queryBuilder.join("&")}`);
+    await navigateTo(
+      `/tokens?${buildQueryForTokens(access_token, id_token, refresh_token)}`,
+    );
   } catch (e) {
     showError((e as Error).message);
   }

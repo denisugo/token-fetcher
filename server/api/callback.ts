@@ -1,6 +1,7 @@
 import type { AuthorizationCodeCredentialsDto } from "~/types/credentials";
 import type { ErrorData } from "~/types/error";
 import type { TokensResponseDto } from "~/types/tokens";
+import buildQueryForTokens from "~/utils/buildQueryForTokens";
 import toBase64 from "~/utils/toBase64";
 
 export default defineEventHandler(async (event) => {
@@ -28,12 +29,11 @@ export default defineEventHandler(async (event) => {
         headers,
         body: urlencoded,
       });
-    const queryBuilder = [];
-    access_token && queryBuilder.push(`accessToken=${access_token}`);
-    id_token && queryBuilder.push(`idToken=${id_token}`);
-    refresh_token && queryBuilder.push(`refreshToken=${refresh_token}`);
 
-    await sendRedirect(event, `/tokens?${queryBuilder.join("&")}`);
+    await sendRedirect(
+      event,
+      `/tokens?${buildQueryForTokens(access_token, id_token, refresh_token)}`,
+    );
   } catch (e) {
     const data: ErrorData = { originalErrorMessage: (e as Error).message };
     throw createError({
