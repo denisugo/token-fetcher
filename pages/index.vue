@@ -13,10 +13,7 @@
         height="25" /><Button label="Implicit" link
     /></NuxtLink>
     <NuxtLink to="/refresh-token"
-      ><Image
-        src="/icons/under-construction.png"
-        width="25"
-        height="25" /><Button label="Refresh Token" link
+      ><Button label="Refresh Token" link
     /></NuxtLink>
   </div>
 </template>
