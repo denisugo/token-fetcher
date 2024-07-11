@@ -4,11 +4,10 @@ import type { TokensResponseDto } from "~/types/tokens";
 import toBase64 from "~/utils/toBase64";
 
 export default defineEventHandler(async (event) => {
-  const { clientId, clientSecret, tokenUri, callbackUri } = (await useStorage(
-    "data",
-  ).getItem<AuthorizationCodeCredentialsDto>(
-    "credentials-authorization-code",
-  ))!;
+  const { clientId, clientSecret, tokenEndpoint, callbackUri } =
+    (await useStorage("data").getItem<AuthorizationCodeCredentialsDto>(
+      "credentials-authorization-code",
+    ))!;
 
   const { code } = getQuery<{ code: string }>(event);
 
@@ -24,7 +23,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const { access_token, id_token, refresh_token }: TokensResponseDto =
-      await $fetch(tokenUri!, {
+      await $fetch(tokenEndpoint!, {
         method: "POST",
         headers,
         body: urlencoded,

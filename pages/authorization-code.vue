@@ -16,10 +16,14 @@ const responseTypes: ResponseType[] = ["code" /*, "token"*/];
 
 const scope = useState<string>(() => initialValues.value?.scope ?? "openid");
 
-const authUri = useState<string>(() => initialValues.value?.authUri ?? "");
-
-const tokenUri = useState<string>(() => initialValues.value?.tokenUri ?? "");
-
+const authEndpoint = useState<string>(
+  () => initialValues.value?.authEndpoint ?? "",
+);
+const authUrl = computed(() => stringToUrl(authEndpoint.value));
+const tokenEndpoint = useState<string>(
+  () => initialValues.value?.tokenEndpoint ?? "",
+);
+const tokenUrl = computed(() => stringToUrl(tokenEndpoint.value));
 const clientId = useState<string>(() => initialValues.value?.clientId ?? "");
 
 const clientSecret = useState<string>(
@@ -29,26 +33,20 @@ const clientSecret = useState<string>(
 const url = useRequestURL();
 const callbackUri = `${url.protocol}//${url.host}/api/callback`;
 
-const identityProviderUri = computed(() => {
-  // TODO add regex
-  // TODO check if all params a filled out
+const fullAuthEndpoint = computed(() => {
   if (
-    authUri.value &&
-    tokenUri.value &&
+    authUrl.value &&
+    tokenUrl.value &&
     responseType.value &&
     clientId.value &&
     clientSecret.value
   ) {
-    try {
-      const url = new URL(authUri.value);
-      url.searchParams.set("response_type", responseType.value);
-      url.searchParams.set("client_id", clientId.value);
-      url.searchParams.set("redirect_uri", callbackUri);
-      scope.value && url.searchParams.set("scope", scope.value);
-      return url.href;
-    } catch {
-      return null;
-    }
+    const url = new URL(authUrl.value);
+    url.searchParams.set("response_type", responseType.value);
+    url.searchParams.set("client_id", clientId.value);
+    url.searchParams.set("redirect_uri", callbackUri);
+    scope.value && url.searchParams.set("scope", scope.value);
+    return url.href;
   }
   return null;
 });
@@ -65,8 +63,8 @@ async function saveCredentials() {
   const body: AuthorizationCodeCredentialsDto = {
     clientId: clientId.value,
     clientSecret: clientSecret.value,
-    tokenUri: tokenUri.value,
-    authUri: authUri.value,
+    tokenEndpoint: tokenEndpoint.value,
+    authEndpoint: authEndpoint.value,
     scope: scope.value,
     callbackUri,
     responseType: responseType.value,
@@ -79,7 +77,7 @@ async function saveCredentials() {
 }
 async function submit() {
   await saveCredentials();
-  navigateTo(identityProviderUri.value, { external: true });
+  navigateTo(fullAuthEndpoint.value, { external: true });
 }
 </script>
 
@@ -111,12 +109,20 @@ async function submit() {
       <InputText id="scope" v-model="scope" />
     </div>
     <div class="flex flex-column gap-2 w-full">
-      <label for="auth-url">auth url</label>
-      <InputText id="auth-url" v-model="authUri" />
+      <label for="auth-endpoint">authorization endpoint</label>
+      <InputText
+        id="auth-endpoint"
+        v-model="authEndpoint"
+        :invalid="Boolean(!authUrl && authEndpoint)"
+      />
     </div>
     <div class="flex flex-column gap-2 w-full">
-      <label for="token-url">token url</label>
-      <InputText id="token-url" v-model="tokenUri" />
+      <label for="token-endpoint">token endpoint</label>
+      <InputText
+        id="token-endpoint"
+        v-model="tokenEndpoint"
+        :invalid="Boolean(!tokenUrl && tokenEndpoint)"
+      />
     </div>
     <div class="flex flex-column gap-2 w-full">
       <label for="client-id">client id</label>
@@ -134,7 +140,7 @@ async function submit() {
         aria-label="Submit"
         :loading="loading"
         label="Fetch"
-        :disabled="!identityProviderUri || loading"
+        :disabled="!fullAuthEndpoint || loading"
         @click="submit"
       />
     </div>

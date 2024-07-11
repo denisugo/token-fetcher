@@ -3,8 +3,8 @@ export interface AuthorizationCodeCredentialsDto {
   clientSecret?: string;
   responseType?: ResponseType;
   scope?: string;
-  authUri?: string;
-  tokenUri?: string;
+  authEndpoint?: string;
+  tokenEndpoint?: string;
   callbackUri?: string;
 }
 
@@ -12,7 +12,7 @@ export type ResponseType = "code" | "token";
 
 export interface RefreshTokenCredentialsDto {
   refreshToken?: string;
-  tokenUri?: string;
+  tokenEndpoint?: string;
   clientId?: string;
   clientSecret?: string;
 }

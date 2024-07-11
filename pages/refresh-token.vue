@@ -20,28 +20,14 @@ const { data: initialValues } = await useFetch(
 const refreshToken = useState<string>(
   () => initialValues.value?.refreshToken ?? "",
 );
-const tokenUri = useState<string>(() => initialValues.value?.tokenUri ?? "");
+const tokenEndpoint = useState<string>(
+  () => initialValues.value?.tokenEndpoint ?? "",
+);
+const tokenUrl = computed(() => stringToUrl(tokenEndpoint.value));
 const clientId = useState<string>(() => initialValues.value?.clientId ?? "");
 const clientSecret = useState<string>(
   () => initialValues.value?.clientSecret ?? "",
 );
-
-const identityProviderUri = computed(() => {
-  if (
-    tokenUri.value &&
-    clientId.value &&
-    clientSecret.value &&
-    refreshToken.value
-  ) {
-    try {
-      const url = new URL(tokenUri.value); // TODO replace with regex
-      return url.href;
-    } catch {
-      return null;
-    }
-  }
-  return null;
-});
 
 async function callIdentityProviderEndpoint() {
   const authorization = toBase64(`${clientId.value}:${clientSecret.value}`);
@@ -55,7 +41,7 @@ async function callIdentityProviderEndpoint() {
 
   try {
     const { access_token, id_token, refresh_token }: TokensResponseDto =
-      await $fetch(identityProviderUri.value!, {
+      await $fetch(tokenEndpoint.value!, {
         method: "POST",
         headers,
         body: urlencoded,
@@ -76,7 +62,7 @@ async function saveCredentials() {
   const body: RefreshTokenCredentialsDto = {
     clientId: clientId.value,
     clientSecret: clientSecret.value,
-    tokenUri: tokenUri.value,
+    tokenEndpoint: tokenEndpoint.value,
     refreshToken: refreshToken.value,
   };
   await $fetch("/api/refresh-token-credentials", {
@@ -103,8 +89,12 @@ async function submit() {
       <InputText id="refresh-token" v-model="refreshToken" />
     </div>
     <div class="flex flex-column gap-2 w-full">
-      <label for="token-url">token url</label>
-      <InputText id="token-url" v-model="tokenUri" />
+      <label for="token-endpoint">token endpoint</label>
+      <InputText
+        id="token-endpoint"
+        v-model="tokenEndpoint"
+        :invalid="Boolean(!tokenUrl && tokenEndpoint)"
+      />
     </div>
     <div class="flex flex-column gap-2 w-full">
       <label for="client-id">client id</label>
@@ -122,7 +112,7 @@ async function submit() {
         aria-label="Submit"
         :loading="loading"
         label="Fetch"
-        :disabled="!identityProviderUri || loading"
+        :disabled="!tokenUrl || loading"
         @click="submit"
       />
     </div>
