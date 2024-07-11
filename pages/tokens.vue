@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { TokensQueryDto } from "~/types/tokens";
-
+definePageMeta({
+  middleware: ["token-hash-params"],
+});
 const { query }: { query: TokensQueryDto } = useRoute();
 
 const accessToken = computed(() => query.accessToken);

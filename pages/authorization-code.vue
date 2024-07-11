@@ -12,7 +12,7 @@ const { data: initialValues } = await useFetch(
 const responseType = useState<ResponseType>(
   () => initialValues.value?.responseType ?? ("code" as ResponseType),
 );
-const responseTypes: ResponseType[] = ["code" /*, "token"*/];
+const responseTypes: ResponseType[] = ["code", "token"];
 
 const scope = useState<string>(() => initialValues.value?.scope ?? "openid");
 
@@ -31,7 +31,10 @@ const clientSecret = useState<string>(
 );
 
 const url = useRequestURL();
-const callbackUri = `${url.protocol}//${url.host}/api/callback`;
+const callbackUri = computed(
+  () =>
+    `${url.protocol}//${url.host}/${responseType.value === "code" ? "api/callback" : "tokens"}`,
+);
 
 const fullAuthEndpoint = computed(() => {
   if (
@@ -44,7 +47,7 @@ const fullAuthEndpoint = computed(() => {
     const url = new URL(authUrl.value);
     url.searchParams.set("response_type", responseType.value);
     url.searchParams.set("client_id", clientId.value);
-    url.searchParams.set("redirect_uri", callbackUri);
+    url.searchParams.set("redirect_uri", callbackUri.value);
     scope.value && url.searchParams.set("scope", scope.value);
     return url.href;
   }
@@ -66,7 +69,7 @@ async function saveCredentials() {
     tokenEndpoint: tokenEndpoint.value,
     authEndpoint: authEndpoint.value,
     scope: scope.value,
-    callbackUri,
+    callbackUri: callbackUri.value,
     responseType: responseType.value,
   };
   await $fetch("/api/authorization-code-credentials", {
@@ -86,10 +89,7 @@ async function submit() {
     <h1 class="text-xl">Authorization Code</h1>
 
     <div class="flex flex-column gap-2 w-full">
-      <label for="response-type"
-        ><Image src="/icons/under-construction.png" width="15" height="15" />
-        response type</label
-      >
+      <label for="response-type"> response type</label>
       <Dropdown
         id="response-type"
         v-model="responseType"
@@ -98,10 +98,7 @@ async function submit() {
       />
     </div>
     <div class="flex flex-column gap-2 w-full">
-      <label for="calback-url"
-        ><Image src="/icons/under-construction.png" width="15" height="15" />
-        callback url</label
-      >
+      <label for="calback-url"> callback url</label>
       <InputText id="calback-url" :value="callbackUri" disabled />
     </div>
     <div class="flex flex-column gap-2 w-full">
