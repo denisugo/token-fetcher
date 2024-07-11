@@ -10,6 +10,6 @@ const props = defineProps<{ token: string }>();
     aria-label="Redirect"
     label="open in jwt.io"
   >
-    <Button label="open in jwt.io" class="w-10rem" />
+    <Button icon="pi pi-external-link" label="open in jwt.io" class="w-10rem" />
   </NuxtLink>
 </template>
