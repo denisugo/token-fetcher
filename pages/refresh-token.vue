@@ -109,7 +109,9 @@ async function submit() {
         aria-label="Submit"
         :loading="loading"
         label="Fetch"
-        :disabled="!tokenUrl || loading"
+        :disabled="
+          !tokenUrl || !refreshToken || !clientId || !clientSecret || loading
+        "
         @click="submit"
       />
     </div>
