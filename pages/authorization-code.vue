@@ -1,33 +1,35 @@
 <script setup lang="ts">
+import useAuthorizationCodeInitialState from "~/composables/use-authorization-code-initial-state";
 import type {
   AuthorizationCodeCredentialsDto,
   ResponseType,
 } from "~/types/credentials";
 
-// const router = useRouter();
-const { data: initialValues } = await useFetch(
-  "/api/authorization-code-credentials",
+const { key, initialValues } = await useAuthorizationCodeInitialState();
+
+const title = useState<string>(() =>
+  key ? base64ToString(key) : Date.now().toString(),
 );
 
 const responseType = useState<ResponseType>(
-  () => initialValues.value?.responseType ?? ("code" as ResponseType),
+  () => initialValues?.value?.responseType ?? ("code" as ResponseType),
 );
 const responseTypes: ResponseType[] = ["code", "token"];
 
-const scope = useState<string>(() => initialValues.value?.scope ?? "openid");
+const scope = useState<string>(() => initialValues?.value?.scope ?? "openid");
 
 const authEndpoint = useState<string>(
-  () => initialValues.value?.authEndpoint ?? "",
+  () => initialValues?.value?.authEndpoint ?? "",
 );
 const authUrl = computed(() => stringToUrl(authEndpoint.value));
 const tokenEndpoint = useState<string>(
-  () => initialValues.value?.tokenEndpoint ?? "",
+  () => initialValues?.value?.tokenEndpoint ?? "",
 );
 const tokenUrl = computed(() => stringToUrl(tokenEndpoint.value));
-const clientId = useState<string>(() => initialValues.value?.clientId ?? "");
+const clientId = useState<string>(() => initialValues?.value?.clientId ?? "");
 
 const clientSecret = useState<string>(
-  () => initialValues.value?.clientSecret ?? "",
+  () => initialValues?.value?.clientSecret ?? "",
 );
 
 const url = useRequestURL();
@@ -53,13 +55,7 @@ const fullAuthEndpoint = computed(() => {
   }
   return null;
 });
-// TODO uncomment
-// watch([identityPorvider, grantType, scope], (newVal) => {
-//     const [newIdentityPorvider, newGrandType, newScope] = newVal
-//     router.push({
-//         query: { identity_provider: newIdentityPorvider, grantType: newGrandType.toLowerCase().replace(" ", "_"), scope: newScope }
-//     })
-// }, {})
+
 const loading = useState<boolean>(() => false);
 async function saveCredentials() {
   loading.value = true;
@@ -72,7 +68,7 @@ async function saveCredentials() {
     callbackUri: callbackUri.value,
     responseType: responseType.value,
   };
-  await $fetch("/api/authorization-code-credentials", {
+  await $fetch(`/api/credentials/authorization-code/${toBase64(title.value)}`, {
     method: "POST",
     body,
   });
@@ -89,6 +85,11 @@ async function submit() {
     <h1 class="text-xl">Authorization Code</h1>
 
     <div class="flex flex-column gap-2 w-full">
+      <div class="flex flex-column gap-2 w-full">
+        <label for="title"> title</label>
+        <InputText id="title" v-model="title" />
+      </div>
+      <Divider />
       <label for="response-type"> response type</label>
       <Dropdown
         id="response-type"
@@ -136,8 +137,8 @@ async function submit() {
         icon="pi pi-check"
         aria-label="Submit"
         :loading="loading"
-        label="Fetch"
-        :disabled="!fullAuthEndpoint || loading"
+        label="Fetch & Save"
+        :disabled="!fullAuthEndpoint || loading || !title"
         @click="submit"
       />
     </div>
