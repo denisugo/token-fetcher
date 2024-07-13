@@ -2,6 +2,7 @@
 import { useToast } from "primevue/usetoast";
 import type { RefreshTokenCredentialsDto } from "~/types/credentials";
 import type { TokensResponseDto } from "~/types/tokens";
+import stringToBase64 from "~/utils/string-to-base64";
 const toast = useToast();
 
 function showError(detail: string) {
@@ -30,7 +31,9 @@ const clientSecret = useState<string>(
 );
 
 async function callIdentityProviderEndpoint() {
-  const authorization = toBase64(`${clientId.value}:${clientSecret.value}`);
+  const authorization = stringToBase64(
+    `${clientId.value}:${clientSecret.value}`,
+  );
   const headers = new Headers();
   headers.append("Authorization", `Basic ${authorization}`);
   headers.append("Content-Type", "application/x-www-form-urlencoded");

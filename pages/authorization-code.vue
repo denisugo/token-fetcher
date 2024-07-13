@@ -4,6 +4,7 @@ import type {
   AuthorizationCodeCredentialsDto,
   ResponseType,
 } from "~/types/credentials";
+import stringToBase64 from "~/utils/string-to-base64";
 
 const { key, initialValues } = await useAuthorizationCodeInitialState();
 
@@ -68,10 +69,13 @@ async function saveCredentials() {
     callbackUri: callbackUri.value,
     responseType: responseType.value,
   };
-  await $fetch(`/api/credentials/authorization-code/${toBase64(title.value)}`, {
-    method: "POST",
-    body,
-  });
+  await $fetch(
+    `/api/credentials/authorization-code/${stringToBase64(title.value)}`,
+    {
+      method: "POST",
+      body,
+    },
+  );
   loading.value = false;
 }
 async function submit() {

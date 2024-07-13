@@ -1,8 +1,8 @@
 import type { AuthorizationCodeCredentialsDto } from "~/types/credentials";
 import type { ErrorData } from "~/types/error";
 import type { TokensResponseDto } from "~/types/tokens";
-import buildQueryForTokens from "~/utils/buildQueryForTokens";
-import toBase64 from "~/utils/toBase64";
+import buildQueryForTokens from "~/utils/build-query-for-tokens";
+import stringToBase64 from "~/utils/string-to-base64";
 
 export default defineEventHandler(async (event) => {
   const { clientId, clientSecret, tokenEndpoint, callbackUri } =
@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
 
   const { code } = getQuery<{ code: string }>(event);
 
-  const authoriazation = toBase64(`${clientId}:${clientSecret}`);
+  const authoriazation = stringToBase64(`${clientId}:${clientSecret}`);
   const headers = new Headers();
   headers.append("Authorization", `Basic ${authoriazation}`);
   headers.append("Content-Type", "application/x-www-form-urlencoded");
