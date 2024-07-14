@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   const { key } = getQuery<{ key: string }>(event);
   return (
     (await useStorage("data").getItem<AuthorizationCodeCredentialsDto>(
-      `credentials-authorization-code-${key}`,
+      `credentials:authorization-code:${key}`,
     )) ?? {}
   );
 });
