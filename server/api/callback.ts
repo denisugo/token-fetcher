@@ -7,7 +7,7 @@ import stringToBase64 from "~/utils/string-to-base64";
 export default defineEventHandler(async (event) => {
   const { clientId, clientSecret, tokenEndpoint, callbackUri } =
     (await useStorage("data").getItem<AuthorizationCodeCredentialsDto>(
-      "credentials-authorization-code",
+      "callback-credentials:authorization-code",
     ))!;
 
   const { code } = getQuery<{ code: string }>(event);

@@ -58,7 +58,10 @@ const fullAuthEndpoint = computed(() => {
 });
 
 const loading = useState<boolean>(() => false);
-async function saveCredentials() {
+
+async function saveCredentials(
+  save: (body: AuthorizationCodeCredentialsDto) => Promise<void>,
+) {
   loading.value = true;
   const body: AuthorizationCodeCredentialsDto = {
     clientId: clientId.value,
@@ -69,17 +72,34 @@ async function saveCredentials() {
     callbackUri: callbackUri.value,
     responseType: responseType.value,
   };
-  await $fetch(
-    `/api/credentials/authorization-code/${stringToBase64(title.value)}`,
-    {
-      method: "POST",
-      body,
-    },
-  );
+  await save(body);
+  // await $fetch(
+  //   `/api/credentials/authorization-code/${stringToBase64(title.value)}`,
+  //   {
+  //     method: "POST",
+  //     body,
+  //   },
+  // );
   loading.value = false;
 }
 async function submit() {
-  await saveCredentials();
+  await saveCredentials(
+    async (body) =>
+      await $fetch(
+        `/api/credentials/authorization-code/${stringToBase64(title.value)}`,
+        {
+          method: "POST",
+          body,
+        },
+      ),
+  );
+  await saveCredentials(
+    async (body) =>
+      await $fetch("/api/credentials/authorization-code/callback", {
+        method: "POST",
+        body,
+      }),
+  );
   navigateTo(fullAuthEndpoint.value, { external: true });
 }
 </script>
