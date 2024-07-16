@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const props = defineProps<{ token: string }>();
+defineProps<{ token: string }>();
 </script>
 <template>
   <NuxtLink
-    :to="`https://jwt.io?token=${props.token}`"
+    :to="`https://jwt.io?token=${token}`"
     target="_blank"
     rel="noopener"
     icon="pi pi-globe"
