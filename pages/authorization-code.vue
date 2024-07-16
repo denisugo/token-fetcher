@@ -7,29 +7,42 @@ import type {
 import stringToBase64 from "~/utils/string-to-base64";
 
 const { key, initialValues } = await useAuthorizationCodeInitialState();
+const { fullPath } = useRoute();
 
-const title = useState<string>(() =>
+const title = useState<string>(`title-${fullPath}`, () =>
   key ? base64ToString(key) : Date.now().toString(),
 );
 
 const responseType = useState<ResponseType>(
+  `response-type-${fullPath}`,
   () => initialValues?.value?.responseType ?? ("code" as ResponseType),
 );
 const responseTypes: ResponseType[] = ["code", "token"];
 
-const scope = useState<string>(() => initialValues?.value?.scope ?? "openid");
+const scope = useState<string>(
+  `scope-${fullPath}`,
+  () => initialValues?.value?.scope ?? "openid",
+);
 
 const authEndpoint = useState<string>(
+  `auth-endpoint-${fullPath}`,
   () => initialValues?.value?.authEndpoint ?? "",
 );
 const authUrl = computed(() => stringToUrl(authEndpoint.value));
+
 const tokenEndpoint = useState<string>(
+  `token-endpoint-${fullPath}`,
   () => initialValues?.value?.tokenEndpoint ?? "",
 );
 const tokenUrl = computed(() => stringToUrl(tokenEndpoint.value));
-const clientId = useState<string>(() => initialValues?.value?.clientId ?? "");
+
+const clientId = useState<string>(
+  `client-id-${fullPath}`,
+  () => initialValues?.value?.clientId ?? "",
+);
 
 const clientSecret = useState<string>(
+  `client-secret-${fullPath}`,
   () => initialValues?.value?.clientSecret ?? "",
 );
 
