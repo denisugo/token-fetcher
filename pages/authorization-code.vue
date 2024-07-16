@@ -53,13 +53,7 @@ const callbackUri = computed(
 );
 
 const fullAuthEndpoint = computed(() => {
-  if (
-    authUrl.value &&
-    tokenUrl.value &&
-    responseType.value &&
-    clientId.value &&
-    clientSecret.value
-  ) {
+  if (authUrl.value && responseType.value && clientId.value) {
     const url = new URL(authUrl.value);
     url.searchParams.set("response_type", responseType.value);
     url.searchParams.set("client_id", clientId.value);
@@ -68,6 +62,15 @@ const fullAuthEndpoint = computed(() => {
     return url.href;
   }
   return null;
+});
+
+// TODO remove title for `fetch without save option`
+const isFetchDisabled = computed(() => {
+  const baseConditions =
+    !title.value || !fullAuthEndpoint.value || loading.value;
+  if (responseType.value === "code")
+    return baseConditions || !tokenUrl.value || !clientSecret.value;
+  return baseConditions;
 });
 
 const loading = useState<boolean>(() => false);
@@ -175,7 +178,7 @@ async function submit() {
         aria-label="Submit"
         :loading="loading"
         label="Fetch & Save"
-        :disabled="!fullAuthEndpoint || loading || !title"
+        :disabled="isFetchDisabled"
         @click="submit"
       />
     </div>

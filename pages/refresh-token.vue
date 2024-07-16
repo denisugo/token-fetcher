@@ -29,6 +29,16 @@ const clientId = useState<string>(() => initialValues.value?.clientId ?? "");
 const clientSecret = useState<string>(
   () => initialValues.value?.clientSecret ?? "",
 );
+const loading = useState<boolean>(() => false);
+
+const isFetchDisabled = computed(
+  () =>
+    !tokenUrl.value ||
+    !refreshToken.value ||
+    !clientId.value ||
+    !clientSecret.value ||
+    loading.value,
+);
 
 async function callIdentityProviderEndpoint() {
   const authorization = stringToBase64(
@@ -71,7 +81,6 @@ async function saveCredentials() {
   }); // assumed reliable enough to add a try-catch
 }
 
-const loading = useState<boolean>(() => false);
 async function submit() {
   loading.value = true;
   await saveCredentials();
@@ -112,9 +121,7 @@ async function submit() {
         aria-label="Submit"
         :loading="loading"
         label="Fetch"
-        :disabled="
-          !tokenUrl || !refreshToken || !clientId || !clientSecret || loading
-        "
+        :disabled="isFetchDisabled"
         @click="submit"
       />
     </div>
