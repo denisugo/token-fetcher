@@ -5,9 +5,7 @@ definePageMeta({
 });
 const { query }: { query: TokensQueryDto } = useRoute();
 
-const accessToken = computed(() => query.accessToken);
-const idToken = computed(() => query.idToken);
-const refreshToken = computed(() => query.refreshToken);
+const { accessToken, idToken, refreshToken } = query;
 </script>
 <template>
   <div>
@@ -20,7 +18,7 @@ const refreshToken = computed(() => query.refreshToken);
         <div class="card flex justify-content-center">
           <Textarea
             id="access-token"
-            v-model="accessToken"
+            :value="accessToken"
             rows="5"
             cols="30"
             disabled
@@ -39,7 +37,7 @@ const refreshToken = computed(() => query.refreshToken);
         <div class="card flex justify-content-center">
           <Textarea
             id="id-token"
-            v-model="idToken"
+            :value="idToken"
             rows="5"
             cols="30"
             disabled
@@ -60,7 +58,7 @@ const refreshToken = computed(() => query.refreshToken);
         <div class="card flex justify-content-center">
           <Textarea
             id="refresh-token"
-            v-model="refreshToken"
+            :value="refreshToken"
             rows="5"
             cols="30"
             disabled
