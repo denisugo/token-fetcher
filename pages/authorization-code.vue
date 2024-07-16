@@ -4,7 +4,6 @@ import type {
   AuthorizationCodeCredentialsDto,
   ResponseType,
 } from "~/types/credentials";
-import stringToBase64 from "~/utils/string-to-base64";
 
 const { key, initialValues } = await useAuthorizationCodeInitialState();
 const { fullPath } = useRoute();
@@ -64,21 +63,16 @@ const fullAuthEndpoint = computed(() => {
   return null;
 });
 
-// TODO remove title for `fetch without save option`
 const isFetchDisabled = computed(() => {
-  const baseConditions =
-    !title.value || !fullAuthEndpoint.value || loading.value;
+  const baseConditions = !fullAuthEndpoint.value;
   if (responseType.value === "code")
     return baseConditions || !tokenUrl.value || !clientSecret.value;
   return baseConditions;
 });
 
-const loading = useState<boolean>(() => false);
-
-async function saveCredentials(
-  save: (body: AuthorizationCodeCredentialsDto) => Promise<void>,
+async function supplyBody(
+  sendRequest: (body: AuthorizationCodeCredentialsDto) => Promise<void>,
 ) {
-  loading.value = true;
   const body: AuthorizationCodeCredentialsDto = {
     clientId: clientId.value,
     clientSecret: clientSecret.value,
@@ -88,18 +82,11 @@ async function saveCredentials(
     callbackUri: callbackUri.value,
     responseType: responseType.value,
   };
-  await save(body);
-  // await $fetch(
-  //   `/api/credentials/authorization-code/${stringToBase64(title.value)}`,
-  //   {
-  //     method: "POST",
-  //     body,
-  //   },
-  // );
-  loading.value = false;
+  await sendRequest(body);
 }
-async function submit() {
-  await saveCredentials(
+
+async function saveCredentials() {
+  await supplyBody(
     async (body) =>
       await $fetch(
         `/api/credentials/authorization-code/${stringToBase64(title.value)}`,
@@ -109,7 +96,9 @@ async function submit() {
         },
       ),
   );
-  await saveCredentials(
+}
+async function fetchTokens() {
+  await supplyBody(
     async (body) =>
       await $fetch("/api/credentials/authorization-code/callback", {
         method: "POST",
@@ -171,16 +160,11 @@ async function submit() {
       <InputText id="client-secret" v-model="clientSecret" />
     </div>
 
-    <div class="flex align-items-center justify-content-center w-full gap-2">
-      <NuxtLink to="/"><Button label="Go Back" link /></NuxtLink>
-      <Button
-        icon="pi pi-check"
-        aria-label="Submit"
-        :loading="loading"
-        label="Fetch & Save"
-        :disabled="isFetchDisabled"
-        @click="submit"
-      />
-    </div>
+    <CustomFetchToolbar
+      :is-fetch-disabled="isFetchDisabled"
+      :is-save-disabled="!title"
+      :fetch-tokens="fetchTokens"
+      :save-credentials="saveCredentials"
+    />
   </div>
 </template>
