@@ -89,7 +89,7 @@ async function supplyBody(
 async function saveCredentials() {
   await supplyBody(
     async (body) =>
-      await $fetch(
+      await $fetch<unknown>(
         `/api/credentials/authorization-code/${stringToBase64(title.value)}`,
         {
           method: "POST",
@@ -101,7 +101,7 @@ async function saveCredentials() {
 async function fetchTokens() {
   await supplyBody(
     async (body) =>
-      await $fetch("/api/credentials/authorization-code/callback", {
+      await $fetch<unknown>("/api/credentials/authorization-code/callback", {
         method: "POST",
         body,
       }),
