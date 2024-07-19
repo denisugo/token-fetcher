@@ -10,14 +10,14 @@ const loadingFetch = useState(() => false);
 const loadingFetchAndSave = useState(() => false);
 const loading = computed(() => loadingFetch || loadingFetchAndSave);
 
-async function fetchAndSave() {
+async function fetchAndSaveWithLoading() {
   loadingFetchAndSave.value = true;
   await saveCredentials();
   await fetchTokens();
   loadingFetchAndSave.value = false;
 }
 
-async function fetchOnly() {
+async function fetchOnlyWithLoading() {
   loadingFetch.value = true;
   await fetchTokens();
   loadingFetch.value = false;
@@ -28,19 +28,19 @@ async function fetchOnly() {
   <div class="flex align-items-center justify-content-center w-full gap-2">
     <Button
       icon="pi pi-check"
-      aria-label="Submit"
+      aria-label="Fetch credentials"
       :loading="loadingFetch"
       label="Fetch"
       :disabled="isFetchDisabled || loading.value"
-      @click="fetchOnly"
+      @click="fetchOnlyWithLoading"
     />
     <Button
       icon="pi pi-check"
-      aria-label="Submit"
+      aria-label="Save credentials and fetch"
       :loading="loadingFetchAndSave"
       label="Fetch & Save"
       :disabled="isFetchDisabled || isSaveDisabled || loading.value"
-      @click="fetchAndSave"
+      @click="fetchAndSaveWithLoading"
     />
   </div>
 </template>
