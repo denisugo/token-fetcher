@@ -13,34 +13,44 @@ function showError(detail: string) {
     life: 3000,
   });
 }
+const { fullPath } = useRoute();
 
-const { data: initialValues } = await useFetch(
-  "/api/refresh-token-credentials",
+const { key, initialValues } =
+  await useInitialState<RefreshTokenCredentialsDto>("refresh-token");
+
+const title = useState<string>(`title-${fullPath}`, () =>
+  key ? base64ToString(key) : Date.now().toString(),
 );
 
 const refreshToken = useState<string>(
-  () => initialValues.value?.refreshToken ?? "",
+  `refresh-token-${fullPath}`,
+  () => initialValues?.value?.refreshToken ?? "",
 );
 const tokenEndpoint = useState<string>(
-  () => initialValues.value?.tokenEndpoint ?? "",
+  `token-nedpoint-${fullPath}`,
+  () => initialValues?.value?.tokenEndpoint ?? "",
 );
 const tokenUrl = computed(() => stringToUrl(tokenEndpoint.value));
-const clientId = useState<string>(() => initialValues.value?.clientId ?? "");
-const clientSecret = useState<string>(
-  () => initialValues.value?.clientSecret ?? "",
+const clientId = useState<string>(
+  `client-id-${fullPath}`,
+  () => initialValues?.value?.clientId ?? "",
 );
-const loading = useState<boolean>(() => false);
+const clientSecret = useState<string>(
+  `client-secret-${fullPath}`,
+  () => initialValues?.value?.clientSecret ?? "",
+);
+// const loading = useState<boolean>(() => false);
 
 const isFetchDisabled = computed(
   () =>
     !tokenUrl.value ||
     !refreshToken.value ||
     !clientId.value ||
-    !clientSecret.value ||
-    loading.value,
+    !clientSecret.value, // ||
+  // loading.value,
 );
 
-async function callIdentityProviderEndpoint() {
+async function fetchTokens() {
   const authorization = stringToBase64(
     `${clientId.value}:${clientSecret.value}`,
   );
@@ -53,8 +63,8 @@ async function callIdentityProviderEndpoint() {
   urlencoded.append("refresh_token", refreshToken.value!);
 
   try {
-    const { access_token, id_token, refresh_token }: TokensResponseDto =
-      await $fetch(tokenEndpoint.value!, {
+    const { access_token, id_token, refresh_token } =
+      await $fetch<TokensResponseDto>(tokenEndpoint.value, {
         method: "POST",
         headers,
         body: urlencoded,
@@ -75,24 +85,24 @@ async function saveCredentials() {
     tokenEndpoint: tokenEndpoint.value,
     refreshToken: refreshToken.value,
   };
-  await $fetch("/api/refresh-token-credentials", {
-    method: "POST",
-    body,
-  }); // assumed reliable enough to add a try-catch
-}
-
-async function submit() {
-  loading.value = true;
-  await saveCredentials();
-  await callIdentityProviderEndpoint();
-  loading.value = false;
+  await $fetch(
+    `/api/credentials/refresh-token/${stringToBase64(title.value)}`,
+    {
+      method: "POST",
+      body,
+    },
+  ); // assumed reliable enough to add a try-catch
 }
 </script>
 <template>
   <div class="flex flex-column align-items-center row-gap-4 w-full md:w-18rem">
     <Toast />
     <h1 class="text-xl">Refresh Token</h1>
-
+    <div class="flex flex-column gap-2 w-full">
+      <label for="title"> title</label>
+      <InputText id="title" v-model="title" />
+    </div>
+    <Divider />
     <div class="flex flex-column gap-2 w-full">
       <label for="refresh-token">refresh token</label>
       <InputText id="refresh-token" v-model="refreshToken" />
@@ -113,17 +123,11 @@ async function submit() {
       <label for="client-secret">client secret</label>
       <InputText id="client-secret" v-model="clientSecret" />
     </div>
-
-    <div class="flex align-items-center justify-content-center w-full gap-2">
-      <NuxtLink to="/"><Button label="Go Back" link /></NuxtLink>
-      <Button
-        icon="pi pi-check"
-        aria-label="Submit"
-        :loading="loading"
-        label="Fetch"
-        :disabled="isFetchDisabled"
-        @click="submit"
-      />
-    </div>
+    <CustomFetchToolbar
+      :is-fetch-disabled="isFetchDisabled"
+      :is-save-disabled="!title"
+      :fetch-tokens="fetchTokens"
+      :save-credentials="saveCredentials"
+    />
   </div>
 </template>
