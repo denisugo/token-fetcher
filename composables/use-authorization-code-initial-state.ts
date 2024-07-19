@@ -3,9 +3,7 @@ export default async function () {
   if (query.key) {
     return {
       initialValues: (
-        await useFetch("/api/credentials/authorization-code", {
-          query: { key: query.key },
-        })
+        await useFetch(`/api/credentials/authorization-code/${query.key}`)
       ).data,
       key: query.key as string,
     };
