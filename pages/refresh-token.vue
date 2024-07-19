@@ -93,11 +93,27 @@ async function saveCredentials() {
     },
   ); // assumed reliable enough to add a try-catch
 }
+
+async function deleteCredentials() {
+  await $fetch<unknown>(
+    `/api/credentials/refresh-token/${stringToBase64(title.value)}`,
+    {
+      method: "DELETE",
+    },
+  );
+}
 </script>
 <template>
   <div class="flex flex-column align-items-center row-gap-4 w-full md:w-18rem">
-    <Toast />
     <h1 class="text-xl">Refresh Token</h1>
+    <CustomStorageToolbar
+      :delete-credentials="deleteCredentials"
+      :save-credentials="saveCredentials"
+      :is-save-disabled="!title"
+      :toast="toast"
+    />
+    <Toast />
+    <!-- TODO move toast to layout -->
     <div class="flex flex-column gap-2 w-full">
       <label for="title"> title</label>
       <InputText id="title" v-model="title" />

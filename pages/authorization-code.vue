@@ -108,12 +108,30 @@ async function fetchTokens() {
   );
   navigateTo(fullAuthEndpoint.value, { external: true });
 }
+
+async function deleteCredentials() {
+  await $fetch<unknown>(
+    `/api/credentials/authorization-code/${stringToBase64(title.value)}`,
+    {
+      method: "DELETE",
+    },
+  );
+}
+
+const toast = useToast();
 </script>
 
 <template>
   <div class="flex flex-column align-items-center row-gap-4 w-full md:w-18rem">
     <h1 class="text-xl">Authorization Code</h1>
-
+    <CustomStorageToolbar
+      :delete-credentials="deleteCredentials"
+      :save-credentials="saveCredentials"
+      :is-save-disabled="!title"
+      :toast="toast"
+    />
+    <Toast />
+    <!-- TODO move toast to layout -->
     <div class="flex flex-column gap-2 w-full">
       <div class="flex flex-column gap-2 w-full">
         <label for="title"> title</label>
