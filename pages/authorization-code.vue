@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import useAuthorizationCodeInitialState from "~/composables/use-authorization-code-initial-state";
+import useInitialState from "~/composables/use-initial-state";
 import type {
   AuthorizationCodeCredentialsDto,
   ResponseType,
 } from "~/types/credentials";
 
-const { key, initialValues } = await useAuthorizationCodeInitialState();
+const { key, initialValues } =
+  await useInitialState<AuthorizationCodeCredentialsDto>("authorization-code");
 const { fullPath } = useRoute();
 
 const title = useState<string>(`title-${fullPath}`, () =>
