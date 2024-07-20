@@ -117,73 +117,60 @@ async function deleteCredentials() {
     },
   );
 }
-
-const toast = useToast();
 </script>
 
 <template>
-  <div class="flex flex-column align-items-center row-gap-4 w-full md:w-18rem">
-    <h1 class="text-xl">Authorization Code</h1>
-    <CustomStorageToolbar
-      :delete-credentials="deleteCredentials"
-      :save-credentials="saveCredentials"
-      :is-save-disabled="!title"
-      :toast="toast"
-    />
-    <Toast />
-    <!-- TODO move toast to layout -->
-    <div class="flex flex-column gap-2 w-full">
+  <GrantFormProvider
+    v-model:title="title"
+    :delete-credentials="deleteCredentials"
+    :fetch-tokens="fetchTokens"
+    grant-name="Authorization code"
+    :is-fetch-disabled="isFetchDisabled"
+    :is-save-disabled="!title"
+    :save-credentials="saveCredentials"
+  >
+    <div class="flex flex-column align-items-center row-gap-4 w-full">
       <div class="flex flex-column gap-2 w-full">
-        <label for="title"> title</label>
-        <InputText id="title" v-model="title" />
+        <label for="response-type"> response type</label>
+        <Dropdown
+          id="response-type"
+          v-model="responseType"
+          :options="responseTypes"
+          placeholder="Select a grand type"
+        />
       </div>
-      <Divider />
-      <label for="response-type"> response type</label>
-      <Dropdown
-        id="response-type"
-        v-model="responseType"
-        :options="responseTypes"
-        placeholder="Select a grand type"
-      />
+      <div class="flex flex-column gap-2 w-full">
+        <label for="calback-url"> callback url</label>
+        <InputText id="calback-url" :value="callbackUri" disabled />
+      </div>
+      <div class="flex flex-column gap-2 w-full">
+        <label for="scope">scope</label>
+        <InputText id="scope" v-model="scope" />
+      </div>
+      <div class="flex flex-column gap-2 w-full">
+        <label for="auth-endpoint">authorization endpoint</label>
+        <InputText
+          id="auth-endpoint"
+          v-model="authEndpoint"
+          :invalid="Boolean(!authUrl && authEndpoint)"
+        />
+      </div>
+      <div class="flex flex-column gap-2 w-full">
+        <label for="token-endpoint">token endpoint</label>
+        <InputText
+          id="token-endpoint"
+          v-model="tokenEndpoint"
+          :invalid="Boolean(!tokenUrl && tokenEndpoint)"
+        />
+      </div>
+      <div class="flex flex-column gap-2 w-full">
+        <label for="client-id">client id</label>
+        <InputText id="client-id" v-model="clientId" />
+      </div>
+      <div class="flex flex-column gap-2 w-full">
+        <label for="client-secret">client secret</label>
+        <InputText id="client-secret" v-model="clientSecret" />
+      </div>
     </div>
-    <div class="flex flex-column gap-2 w-full">
-      <label for="calback-url"> callback url</label>
-      <InputText id="calback-url" :value="callbackUri" disabled />
-    </div>
-    <div class="flex flex-column gap-2 w-full">
-      <label for="scope">scope</label>
-      <InputText id="scope" v-model="scope" />
-    </div>
-    <div class="flex flex-column gap-2 w-full">
-      <label for="auth-endpoint">authorization endpoint</label>
-      <InputText
-        id="auth-endpoint"
-        v-model="authEndpoint"
-        :invalid="Boolean(!authUrl && authEndpoint)"
-      />
-    </div>
-    <div class="flex flex-column gap-2 w-full">
-      <label for="token-endpoint">token endpoint</label>
-      <InputText
-        id="token-endpoint"
-        v-model="tokenEndpoint"
-        :invalid="Boolean(!tokenUrl && tokenEndpoint)"
-      />
-    </div>
-    <div class="flex flex-column gap-2 w-full">
-      <label for="client-id">client id</label>
-      <InputText id="client-id" v-model="clientId" />
-    </div>
-    <div class="flex flex-column gap-2 w-full">
-      <label for="client-secret">client secret</label>
-      <InputText id="client-secret" v-model="clientSecret" />
-    </div>
-
-    <CustomFetchToolbar
-      :is-fetch-disabled="isFetchDisabled"
-      :is-save-disabled="!title"
-      :fetch-tokens="fetchTokens"
-      :save-credentials="saveCredentials"
-    />
-  </div>
+  </GrantFormProvider>
 </template>

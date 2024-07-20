@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useToast } from "primevue/usetoast";
+import GrantFormProvider from "~/components/GrantFormProvider.vue";
 import type { RefreshTokenCredentialsDto } from "~/types/credentials";
 import type { TokensResponseDto } from "~/types/tokens";
 import stringToBase64 from "~/utils/string-to-base64";
@@ -39,15 +40,13 @@ const clientSecret = useState<string>(
   `client-secret-${fullPath}`,
   () => initialValues?.value?.clientSecret ?? "",
 );
-// const loading = useState<boolean>(() => false);
 
 const isFetchDisabled = computed(
   () =>
     !tokenUrl.value ||
     !refreshToken.value ||
     !clientId.value ||
-    !clientSecret.value, // ||
-  // loading.value,
+    !clientSecret.value,
 );
 
 async function fetchTokens() {
@@ -103,47 +102,38 @@ async function deleteCredentials() {
   );
 }
 </script>
+
 <template>
-  <div class="flex flex-column align-items-center row-gap-4 w-full md:w-18rem">
-    <h1 class="text-xl">Refresh Token</h1>
-    <CustomStorageToolbar
-      :delete-credentials="deleteCredentials"
-      :save-credentials="saveCredentials"
-      :is-save-disabled="!title"
-      :toast="toast"
-    />
-    <Toast />
-    <!-- TODO move toast to layout -->
-    <div class="flex flex-column gap-2 w-full">
-      <label for="title"> title</label>
-      <InputText id="title" v-model="title" />
+  <GrantFormProvider
+    v-model:title="title"
+    :delete-credentials="deleteCredentials"
+    :fetch-tokens="fetchTokens"
+    grant-name="Refresh token"
+    :is-fetch-disabled="isFetchDisabled"
+    :is-save-disabled="!title"
+    :save-credentials="saveCredentials"
+  >
+    <div class="flex flex-column align-items-center row-gap-4 w-full">
+      <div class="flex flex-column gap-2 w-full">
+        <label for="refresh-token">refresh token</label>
+        <InputText id="refresh-token" v-model="refreshToken" />
+      </div>
+      <div class="flex flex-column gap-2 w-full">
+        <label for="token-endpoint">token endpoint</label>
+        <InputText
+          id="token-endpoint"
+          v-model="tokenEndpoint"
+          :invalid="Boolean(!tokenUrl && tokenEndpoint)"
+        />
+      </div>
+      <div class="flex flex-column gap-2 w-full">
+        <label for="client-id">client id</label>
+        <InputText id="client-id" v-model="clientId" />
+      </div>
+      <div class="flex flex-column gap-2 w-full">
+        <label for="client-secret">client secret</label>
+        <InputText id="client-secret" v-model="clientSecret" />
+      </div>
     </div>
-    <Divider />
-    <div class="flex flex-column gap-2 w-full">
-      <label for="refresh-token">refresh token</label>
-      <InputText id="refresh-token" v-model="refreshToken" />
-    </div>
-    <div class="flex flex-column gap-2 w-full">
-      <label for="token-endpoint">token endpoint</label>
-      <InputText
-        id="token-endpoint"
-        v-model="tokenEndpoint"
-        :invalid="Boolean(!tokenUrl && tokenEndpoint)"
-      />
-    </div>
-    <div class="flex flex-column gap-2 w-full">
-      <label for="client-id">client id</label>
-      <InputText id="client-id" v-model="clientId" />
-    </div>
-    <div class="flex flex-column gap-2 w-full">
-      <label for="client-secret">client secret</label>
-      <InputText id="client-secret" v-model="clientSecret" />
-    </div>
-    <CustomFetchToolbar
-      :is-fetch-disabled="isFetchDisabled"
-      :is-save-disabled="!title"
-      :fetch-tokens="fetchTokens"
-      :save-credentials="saveCredentials"
-    />
-  </div>
+  </GrantFormProvider>
 </template>
