@@ -54,6 +54,7 @@ async function deleteCredentialsWithLoading() {
       aria-label="Delete Credentials"
       label="Delete"
       severity="danger"
+      :disabled="loading"
       :loading="loadingDelete"
       @click="deleteCredentialsWithLoading"
     />
