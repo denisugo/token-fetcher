@@ -9,8 +9,10 @@ const { deleteCredentials, saveCredentials, toast } = defineProps<{
 }>();
 
 const {
-  query: { key: isDeleteVisible },
+  query: { key },
 } = useRoute();
+
+const isSaved = ref(!!key);
 
 const loadingDelete = ref(false);
 const loadingSave = ref(false);
@@ -20,6 +22,9 @@ async function saveCredentialsWithLoading() {
   loadingSave.value = true;
   await saveCredentials();
   loadingSave.value = false;
+
+  isSaved.value = true;
+
   toast.add({
     severity: "success",
     summary: "Successfully saved",
@@ -31,6 +36,9 @@ async function deleteCredentialsWithLoading() {
   loadingDelete.value = true;
   await deleteCredentials();
   loadingDelete.value = false;
+
+  isSaved.value = false;
+
   toast.add({
     severity: "success",
     summary: "Successfully deleted",
@@ -49,7 +57,7 @@ async function deleteCredentialsWithLoading() {
       @click="saveCredentialsWithLoading"
     />
     <Button
-      v-if="isDeleteVisible"
+      v-if="isSaved"
       icon="pi pi-trash"
       aria-label="Delete Credentials"
       label="Delete"
