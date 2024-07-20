@@ -1,12 +1,20 @@
 <script setup lang="ts">
 const { data: keys } = await useFetch("/api/credentials/all-credential-keys");
 const displayReadyKeys = computed(() =>
-  keys.value?.map((key) => {
-    const keyArr = key.split(":"); // -- is not used in base64, 0 index stands for "credentials"
-    const link = keyArr[1];
-    const keyQuery = keyArr[2]; // copying a primitive value
-    return { label: `${link} ${base64ToString(keyArr[2])}`, keyQuery, link };
-  }),
+  keys.value
+    ?.map((key) => {
+      const keyArr = key.split(":"); // -- is not used in base64, 0 index stands for "credentials"
+      const link = keyArr[1];
+      const keyQuery = keyArr[2]; // copying a primitive value
+      return { label: `${link} ${base64ToString(keyArr[2])}`, keyQuery, link };
+    })
+    .sort((a, b) => {
+      const labelA = a.label.toUpperCase(); // ignore upper and lowercase
+      const labelB = b.label.toUpperCase(); // ignore upper and lowercase
+      if (labelA < labelB) return -1;
+      if (labelA > labelB) return 1;
+      return 0;
+    }),
 );
 </script>
 
