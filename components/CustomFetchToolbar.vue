@@ -6,9 +6,9 @@ const { fetchTokens, saveCredentials } = defineProps<{
   saveCredentials: () => Promise<void>;
 }>();
 
-const loadingFetch = useState(() => false);
-const loadingFetchAndSave = useState(() => false);
-const loading = computed(() => loadingFetch || loadingFetchAndSave);
+const loadingFetch = ref(false);
+const loadingFetchAndSave = ref(false);
+const loading = computed(() => loadingFetch.value || loadingFetchAndSave.value);
 
 async function fetchAndSaveWithLoading() {
   loadingFetchAndSave.value = true;
@@ -31,7 +31,7 @@ async function fetchOnlyWithLoading() {
       aria-label="Fetch credentials"
       :loading="loadingFetch"
       label="Fetch"
-      :disabled="isFetchDisabled || loading.value"
+      :disabled="isFetchDisabled || loading"
       @click="fetchOnlyWithLoading"
     />
     <Button
@@ -39,7 +39,7 @@ async function fetchOnlyWithLoading() {
       aria-label="Save credentials and fetch"
       :loading="loadingFetchAndSave"
       label="Fetch & Save"
-      :disabled="isFetchDisabled || isSaveDisabled || loading.value"
+      :disabled="isFetchDisabled || isSaveDisabled || loading"
       @click="fetchAndSaveWithLoading"
     />
   </div>

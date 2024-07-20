@@ -14,32 +14,20 @@ function showError(detail: string) {
     life: 3000,
   });
 }
-const { fullPath } = useRoute();
 
 const { key, initialValues } =
   await useInitialState<RefreshTokenCredentialsDto>("refresh-token");
 
-const title = useState<string>(`title-${fullPath}`, () =>
-  key ? base64ToString(key) : Date.now().toString(),
-);
+const title = ref(key ? base64ToString(key) : Date.now().toString());
 
-const refreshToken = useState<string>(
-  `refresh-token-${fullPath}`,
-  () => initialValues?.value?.refreshToken ?? "",
-);
-const tokenEndpoint = useState<string>(
-  `token-nedpoint-${fullPath}`,
-  () => initialValues?.value?.tokenEndpoint ?? "",
-);
+const refreshToken = ref(initialValues?.value?.refreshToken ?? "");
+
+const tokenEndpoint = ref(initialValues?.value?.tokenEndpoint ?? "");
+
 const tokenUrl = computed(() => stringToUrl(tokenEndpoint.value));
-const clientId = useState<string>(
-  `client-id-${fullPath}`,
-  () => initialValues?.value?.clientId ?? "",
-);
-const clientSecret = useState<string>(
-  `client-secret-${fullPath}`,
-  () => initialValues?.value?.clientSecret ?? "",
-);
+const clientId = ref(initialValues?.value?.clientId ?? "");
+
+const clientSecret = ref(initialValues?.value?.clientSecret ?? "");
 
 const isFetchDisabled = computed(
   () =>

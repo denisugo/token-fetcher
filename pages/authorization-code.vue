@@ -7,49 +7,32 @@ import type {
 
 const { key, initialValues } =
   await useInitialState<AuthorizationCodeCredentialsDto>("authorization-code");
-const { fullPath } = useRoute();
 
-const title = useState<string>(`title-${fullPath}`, () =>
-  key ? base64ToString(key) : Date.now().toString(),
+const title = ref(key ? base64ToString(key) : Date.now().toString());
+
+const responseType = ref(
+  initialValues?.value?.responseType ?? ("code" as ResponseType),
 );
 
-const responseType = useState<ResponseType>(
-  `response-type-${fullPath}`,
-  () => initialValues?.value?.responseType ?? ("code" as ResponseType),
-);
 const responseTypes: ResponseType[] = ["code", "token"];
 
-const scope = useState<string>(
-  `scope-${fullPath}`,
-  () => initialValues?.value?.scope ?? "openid",
-);
+const scope = ref(initialValues?.value?.scope ?? "openid");
 
-const authEndpoint = useState<string>(
-  `auth-endpoint-${fullPath}`,
-  () => initialValues?.value?.authEndpoint ?? "",
-);
+const authEndpoint = ref(initialValues?.value?.authEndpoint ?? "");
 const authUrl = computed(() => stringToUrl(authEndpoint.value));
 
-const tokenEndpoint = useState<string>(
-  `token-endpoint-${fullPath}`,
-  () => initialValues?.value?.tokenEndpoint ?? "",
-);
+const tokenEndpoint = ref(initialValues?.value?.tokenEndpoint ?? "");
+
 const tokenUrl = computed(() => stringToUrl(tokenEndpoint.value));
 
-const clientId = useState<string>(
-  `client-id-${fullPath}`,
-  () => initialValues?.value?.clientId ?? "",
-);
+const clientId = ref(initialValues?.value?.clientId ?? "");
 
-const clientSecret = useState<string>(
-  `client-secret-${fullPath}`,
-  () => initialValues?.value?.clientSecret ?? "",
-);
+const clientSecret = ref(initialValues?.value?.clientSecret ?? "");
 
-const url = useRequestURL();
+const currentUrl = useRequestURL();
 const callbackUri = computed(
   () =>
-    `${url.protocol}//${url.host}/${responseType.value === "code" ? "api/callback" : "tokens"}`,
+    `${currentUrl.protocol}//${currentUrl.host}/${responseType.value === "code" ? "api/callback" : "tokens"}`,
 );
 
 const fullAuthEndpoint = computed(() => {

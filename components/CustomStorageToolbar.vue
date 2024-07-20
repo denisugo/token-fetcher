@@ -12,9 +12,9 @@ const {
   query: { key: isDeleteVisible },
 } = useRoute();
 
-const loadingDelete = useState(() => false);
-const loadingSave = useState(() => false);
-const loading = computed(() => loadingDelete || loadingSave);
+const loadingDelete = ref(false);
+const loadingSave = ref(false);
+const loading = computed(() => loadingDelete.value || loadingSave.value);
 
 async function saveCredentialsWithLoading() {
   loadingSave.value = true;
@@ -45,7 +45,7 @@ async function deleteCredentialsWithLoading() {
       aria-label="Save credentials"
       label="Save"
       :loading="loadingSave"
-      :disabled="isSaveDisabled || loading.value"
+      :disabled="isSaveDisabled || loading"
       @click="saveCredentialsWithLoading"
     />
     <Button
