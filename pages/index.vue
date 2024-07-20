@@ -23,19 +23,20 @@ const displayReadyKeys = computed(() =>
     class="flex align-items-center justify-content-center flex-column h-full w-full"
   >
     <h3>Pick a flow</h3>
-    <NuxtLink to="/authorization-code"
-      ><Button label="Authorization Code" link
-    /></NuxtLink>
-    <NuxtLink to="/implicit"
-      ><Image
-        src="/icons/under-construction.png"
-        width="25"
-        height="25" /><Button label="Implicit" link
-    /></NuxtLink>
-    <NuxtLink to="/refresh-token"
-      ><Button label="Refresh Token" link
-    /></NuxtLink>
-
+    <div class="flex flex-column align-items-start">
+      <NuxtLink to="/authorization-code"
+        ><Button label="Authorization Code" link
+      /></NuxtLink>
+      <NuxtLink to="/implicit"
+        ><Image
+          src="/icons/under-construction.png"
+          width="25"
+          height="25" /><Button label="Implicit" link
+      /></NuxtLink>
+      <NuxtLink to="/refresh-token"
+        ><Button label="Refresh Token" link
+      /></NuxtLink>
+    </div>
     <Divider />
 
     <h3>
@@ -43,7 +44,7 @@ const displayReadyKeys = computed(() =>
       Pick a Saved Item
     </h3>
     <div class="card flex justify-content-center">
-      <Listbox :options="displayReadyKeys" class="w-full md:w-20rem">
+      <Listbox :options="displayReadyKeys">
         <template #option="slotProps">
           <NuxtLink
             :to="`/${slotProps.option.link}?key=${slotProps.option.keyQuery}`"
@@ -52,10 +53,5 @@ const displayReadyKeys = computed(() =>
         </template>
       </Listbox>
     </div>
-    <!-- <li v-for="key in displayReadyKeys" :key="key.keyQuery">
-      <NuxtLink :to="`/${key.link}?key=${key.keyQuery}`"
-        ><Button :label="key.label" link
-      /></NuxtLink>
-    </li> -->
   </div>
 </template>
