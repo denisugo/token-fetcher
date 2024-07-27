@@ -1,7 +1,7 @@
 # TOKEN FETCHER
 
 ### Disclaimer
-This is an alpha version.
+This is a beta version.
 
 ### Description
 This app fetches OAuth 2.0 `accesstoken`, `id token`, and `refresh token` for further processing/attribute check.
