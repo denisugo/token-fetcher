@@ -10,7 +10,7 @@ This app fetches OAuth 2.0 `accesstoken`, `id token`, and `refresh token` for fu
 The goal of this project is to enhance DX for developers who are focused on a token’s content rather then on different parameters or aspects of an OAuth 2.0 flow itself. The app provides a quick and convenient way of fetching a token set with `access token`, `id token`, and `refresh token`(if applicable).
 
 The app currently supports the following flows:
-- **Authorization code** 
+- **Authorization code** (including the token`response type`) 
 - **Refresh token**
 
 
