@@ -39,12 +39,9 @@ const displayReadyKeys = computed(() =>
     </div>
     <Divider />
 
-    <h3>
-      <Image src="/icons/under-construction.png" width="20" height="20" />Or
-      Pick a Saved Item
-    </h3>
+    <h3>Or Pick a Saved Item</h3>
     <div class="card flex justify-content-center">
-      <Listbox :options="displayReadyKeys">
+      <Listbox :options="displayReadyKeys" list-style="max-height:300px">
         <template #option="slotProps">
           <NuxtLink
             :to="`/${slotProps.option.link}?key=${slotProps.option.keyQuery}`"
