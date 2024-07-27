@@ -27,12 +27,12 @@ const displayReadyKeys = computed(() =>
       <NuxtLink to="/authorization-code"
         ><Button label="Authorization Code" link
       /></NuxtLink>
-      <NuxtLink to="/implicit"
+      <!-- <NuxtLink to="/implicit"
         ><Image
           src="/icons/under-construction.png"
           width="25"
           height="25" /><Button label="Implicit" link
-      /></NuxtLink>
+      /></NuxtLink> -->
       <NuxtLink to="/refresh-token"
         ><Button label="Refresh Token" link
       /></NuxtLink>

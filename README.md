@@ -22,4 +22,4 @@ The app currently supports the following flows:
 
 ### Credits
 - Favicon Icon - https://www.flaticon.com/free-icons/keychain
-- Under Construction Icon - https://www.flaticon.com/free-icons/under-construction
+<!-- - Under Construction Icon - https://www.flaticon.com/free-icons/under-construction -->
