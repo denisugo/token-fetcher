@@ -3,6 +3,7 @@ import type { ErrorData } from "~/types/error";
 import type { TokensResponseDto } from "~/types/tokens";
 import buildQueryForTokens from "~/utils/build-query-for-tokens";
 import stringToBase64 from "~/utils/string-to-base64";
+// TODO consider moving this to a subfolder. Now it looks better on authorization code grant page.
 
 export default defineEventHandler(async (event) => {
   const { clientId, clientSecret, tokenEndpoint, callbackUri } =
