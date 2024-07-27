@@ -8,7 +8,11 @@ const { fetchTokens, saveCredentials } = defineProps<{
 
 const loadingFetch = ref(false);
 const loadingFetchAndSave = ref(false);
-const loading = computed(() => loadingFetch.value || loadingFetchAndSave.value);
+
+const [loading, setLoading] = useLoaadingState();
+watch([loadingFetch, loadingFetchAndSave], (newLoadings) =>
+  setLoading(newLoadings[0] || newLoadings[1]),
+);
 
 async function fetchAndSaveWithLoading() {
   loadingFetchAndSave.value = true;

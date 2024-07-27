@@ -16,7 +16,11 @@ const isSaved = ref(!!key);
 
 const loadingDelete = ref(false);
 const loadingSave = ref(false);
-const loading = computed(() => loadingDelete.value || loadingSave.value);
+
+const [loading, setLoading] = useLoaadingState();
+watch([loadingDelete, loadingSave], (newLoadings) =>
+  setLoading(newLoadings[0] || newLoadings[1]),
+);
 
 async function saveCredentialsWithLoading() {
   loadingSave.value = true;
