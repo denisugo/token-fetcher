@@ -18,7 +18,12 @@ The app currently supports the following flows:
 1. Run `docker build -t token-fetcher .`
 2. Run `docker run --rm -p "3333:3333" -v ${PWD}/.data:/src/.data --name token-fetcher-container token-fetcher`.
 
-3. If you like this project, consider giving it a ⭐️
+OR
+
+1. Simply run `make`, which will execute the commands mentioned above
+
+### Final thoughts
+If you like this project, consider giving it a ⭐️
 
 ### Credits
 - Favicon Icon - https://www.flaticon.com/free-icons/keychain
