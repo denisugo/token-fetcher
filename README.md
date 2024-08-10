@@ -22,6 +22,12 @@ OR
 
 1. Simply run `make`, which will execute the commands mentioned above
 
+### Local development
+
+If you want to play with this project a bit, you can use **Keycloak** as your local **identity provider**. Run it using the following command:
+
+`docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -v ./keycloak:/opt/keycloak/data/ quay.io/keycloak/keycloak:25.0.1 start-dev`
+
 ### Final thoughts
 If you like this project, consider giving it a ⭐️
 
