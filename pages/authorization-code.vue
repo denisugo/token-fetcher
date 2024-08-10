@@ -30,7 +30,7 @@ const clientId = ref(initialValues?.value?.clientId ?? "");
 const clientSecret = ref(initialValues?.value?.clientSecret ?? "");
 
 const currentUrl = useRequestURL();
-const callbackUri = computed(
+const callbackEndpoint = computed(
   () =>
     `${currentUrl.protocol}//${currentUrl.host}/${responseType.value === "code" ? "api/callback" : "tokens"}`,
 );
@@ -40,7 +40,7 @@ const fullAuthEndpoint = computed(() => {
     const url = new URL(authUrl.value);
     url.searchParams.set("response_type", responseType.value);
     url.searchParams.set("client_id", clientId.value);
-    url.searchParams.set("redirect_uri", callbackUri.value);
+    url.searchParams.set("redirect_uri", callbackEndpoint.value);
     scope.value && url.searchParams.set("scope", scope.value);
     return url.href;
   }
@@ -63,7 +63,7 @@ async function supplyBody(
     tokenEndpoint: tokenEndpoint.value,
     authEndpoint: authEndpoint.value,
     scope: scope.value,
-    callbackUri: callbackUri.value,
+    callbackUri: callbackEndpoint.value,
     responseType: responseType.value,
   };
   await sendRequest(body);
@@ -124,7 +124,7 @@ async function deleteCredentials() {
       </div>
       <div class="flex flex-column gap-2 w-full">
         <label for="calback-url"> callback url</label>
-        <InputText id="calback-url" :value="callbackUri" disabled />
+        <InputText id="calback-url" :value="callbackEndpoint" disabled />
       </div>
       <div class="flex flex-column gap-2 w-full">
         <label for="scope">scope</label>
