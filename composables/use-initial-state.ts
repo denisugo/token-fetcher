@@ -1,4 +1,4 @@
-type GrantType = "authorization-code" | "refresh-token";
+type GrantType = "authorization-code" | "refresh-token" | "pkce";
 
 export default async function <T>(grantType: GrantType) {
   const { query } = useRoute();
