@@ -37,7 +37,7 @@ const callbackEndpoint = computed(
 
 const fullAuthEndpoint = computed(() => {
   if (authUrl.value && responseType.value && clientId.value) {
-    const url = new URL(authUrl.value);
+    const url = authUrl.value;
     url.searchParams.set("response_type", responseType.value);
     url.searchParams.set("client_id", clientId.value);
     url.searchParams.set("redirect_uri", callbackEndpoint.value);
