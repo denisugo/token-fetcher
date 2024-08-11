@@ -7,11 +7,11 @@ export default async function <T>(grantType: GrantType) {
       initialValues: (
         await useFetch(`/api/credentials/${grantType}/${query.key}`)
       ).data as globalThis.Ref<T | null>,
-      key: query.key as string,
+      key: base64ToString(query.key as string),
     };
   }
   return {
     initialValues: null,
-    key: null,
+    key: import.meta.client ? Date.now().toString() : "",
   };
 }

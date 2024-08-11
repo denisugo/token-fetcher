@@ -18,7 +18,7 @@ function showError(detail: string) {
 const { key, initialValues } =
   await useInitialState<RefreshTokenCredentialsDto>("refresh-token");
 
-const title = ref(key ? base64ToString(key) : Date.now().toString());
+const title = ref(key!);
 
 const refreshToken = ref(initialValues?.value?.refreshToken ?? "");
 
