@@ -16,3 +16,11 @@ export interface RefreshTokenCredentialsDto {
   clientId?: string;
   clientSecret?: string;
 }
+
+export interface PkceCredentialsDto {
+  clientId?: string;
+  codeVerifier?: string;
+  authEndpoint?: string;
+  tokenEndpoint?: string;
+  callbackEndpoint?: string;
+}

@@ -36,6 +36,7 @@ const displayReadyKeys = computed(() =>
       <NuxtLink to="/refresh-token"
         ><Button label="Refresh Token" link
       /></NuxtLink>
+      <NuxtLink to="/pkce"><Button label="PKCE" link /></NuxtLink>
     </div>
     <Divider />
 
