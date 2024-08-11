@@ -19,7 +19,8 @@ export interface RefreshTokenCredentialsDto {
 
 export interface PkceCredentialsDto {
   clientId?: string;
-  // scope?: string;
+  codeVerifier?: string;
   authEndpoint?: string;
   tokenEndpoint?: string;
+  callbackEndpoint?: string;
 }
