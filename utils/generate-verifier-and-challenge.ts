@@ -9,7 +9,7 @@ export default async function () {
   return { codeVerifier, codeChallenge };
 }
 
-function generateCodeVerifier(length: number = 128): string {
+function generateCodeVerifier(length: number = 32): string {
   const array = new Uint8Array(length);
   window.crypto.getRandomValues(array);
   return Array.from(array, (byte) => ("0" + byte.toString(16)).slice(-2)).join(
