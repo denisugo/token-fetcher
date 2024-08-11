@@ -8,7 +8,7 @@ import type {
 const { key, initialValues } =
   await useInitialState<AuthorizationCodeCredentialsDto>("authorization-code");
 
-const title = ref(key ? base64ToString(key) : Date.now().toString());
+const title = ref(key!);
 
 const responseType = ref(
   initialValues?.value?.responseType ?? ("code" as ResponseType),

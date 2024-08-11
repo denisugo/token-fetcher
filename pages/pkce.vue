@@ -6,7 +6,7 @@ import stringToBase64 from "~/utils/string-to-base64";
 const { key, initialValues } =
   await useInitialState<PkceCredentialsDto>("pkce");
 
-const title = ref(key ? base64ToString(key) : Date.now().toString());
+const title = ref(key);
 
 const tokenEndpoint = ref(initialValues?.value?.tokenEndpoint ?? "");
 const tokenUrl = computed(() => stringToUrl(tokenEndpoint.value));
