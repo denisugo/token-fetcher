@@ -9,7 +9,7 @@ const { fetchTokens, saveCredentials } = defineProps<{
 const loadingFetch = ref(false);
 const loadingFetchAndSave = ref(false);
 
-const [loading, setLoading] = useLoaadingState();
+const [loading, setLoading] = useLoadingState();
 watch([loadingFetch, loadingFetchAndSave], (newLoadings) =>
   setLoading(newLoadings[0] || newLoadings[1]),
 );

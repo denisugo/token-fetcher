@@ -17,7 +17,7 @@ const isSaved = ref(!!key);
 const loadingDelete = ref(false);
 const loadingSave = ref(false);
 
-const [loading, setLoading] = useLoaadingState();
+const [loading, setLoading] = useLoadingState();
 watch([loadingDelete, loadingSave], (newLoadings) =>
   setLoading(newLoadings[0] || newLoadings[1]),
 );
