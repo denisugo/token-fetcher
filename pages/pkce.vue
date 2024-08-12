@@ -72,7 +72,7 @@ async function saveCredentials() {
 async function fetchTokens() {
   await supplyBody(
     async (body) =>
-      await $fetch<unknown>("/api/pkce/credentialscallback", {
+      await $fetch<unknown>("/api/pkce/credentials/callback", {
         method: "POST",
         body,
       }),
