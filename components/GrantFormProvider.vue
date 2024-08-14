@@ -25,7 +25,7 @@ const toast = useToast();
       <div class="flex flex-column gap-2 w-full">
         <label for="title"> title</label>
         <div class="flex gap-2 w-full">
-          <InputText id="title" v-model="title" />
+          <InputText id="title" v-model="title" class="w-10rem" />
           <CustomStorageToolbar
             :delete-credentials="deleteCredentials"
             :save-credentials="saveCredentials"
