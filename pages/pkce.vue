@@ -16,6 +16,8 @@ const authUrl = computed(() => stringToUrl(authEndpoint.value));
 
 const clientId = ref(initialValues?.value?.clientId ?? "");
 
+const scope = ref(initialValues?.value?.scope ?? "openid");
+
 const responseType = "code";
 const codeChallengeMethod = "S256";
 
@@ -35,6 +37,7 @@ const fullAuthEndpoint = computed(() => {
     const url = new URL(authUrl.value);
     url.searchParams.set("response_type", responseType);
     url.searchParams.set("client_id", clientId.value);
+    scope.value && url.searchParams.set("scope", scope.value);
     url.searchParams.set("redirect_uri", callbackEndpoint.value);
     url.searchParams.set("code_challenge", codeChallenge);
     url.searchParams.set("code_challenge_method", codeChallengeMethod);
@@ -51,6 +54,7 @@ async function supplyBody(
     tokenEndpoint: tokenEndpoint.value,
     authEndpoint: authEndpoint.value,
     callbackEndpoint: callbackEndpoint.value,
+    scope: scope.value,
     codeVerifier,
   };
   await sendRequest(body);
@@ -104,6 +108,10 @@ async function deleteCredentials() {
       <div class="flex flex-column gap-2 w-full">
         <label for="calback-url"> callback url</label>
         <InputText id="calback-url" :value="callbackEndpoint" disabled />
+      </div>
+      <div class="flex flex-column gap-2 w-full">
+        <label for="scope">scope</label>
+        <InputText id="scope" v-model="scope" />
       </div>
       <div class="flex flex-column gap-2 w-full">
         <label for="auth-endpoint">authorization endpoint</label>
