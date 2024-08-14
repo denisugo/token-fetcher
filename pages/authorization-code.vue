@@ -63,7 +63,7 @@ async function supplyBody(
     tokenEndpoint: tokenEndpoint.value,
     authEndpoint: authEndpoint.value,
     scope: scope.value,
-    callbackUri: callbackEndpoint.value,
+    callbackEndpoint: callbackEndpoint.value,
     responseType: responseType.value,
   };
   await sendRequest(body);

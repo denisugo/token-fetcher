@@ -6,7 +6,7 @@ import stringToBase64 from "~/utils/string-to-base64";
 // TODO consider moving this to a subfolder. Now it looks better on authorization code grant page.
 
 export default defineEventHandler(async (event) => {
-  const { clientId, clientSecret, tokenEndpoint, callbackUri } =
+  const { clientId, clientSecret, tokenEndpoint, callbackEndpoint } =
     (await useStorage("data").getItem<AuthorizationCodeCredentialsDto>(
       "callback-credentials:authorization-code",
     ))!;
@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
 
   const urlencoded = new URLSearchParams();
   urlencoded.append("grant_type", "authorization_code");
-  urlencoded.append("redirect_uri", callbackUri!);
+  urlencoded.append("redirect_uri", callbackEndpoint!);
   urlencoded.append("code", code);
 
   try {

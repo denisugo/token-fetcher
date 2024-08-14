@@ -5,7 +5,7 @@ export interface AuthorizationCodeCredentialsDto {
   scope?: string;
   authEndpoint?: string;
   tokenEndpoint?: string;
-  callbackUri?: string;
+  callbackEndpoint?: string;
 }
 
 export type ResponseType = "code" | "token";
