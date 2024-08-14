@@ -42,11 +42,15 @@ const displayReadyKeys = computed(() =>
 
     <h3>Or Pick a Saved Item</h3>
     <div class="card flex justify-content-center">
-      <Listbox :options="displayReadyKeys" list-style="max-height:300px">
+      <Listbox
+        :options="displayReadyKeys"
+        class="w-max md:w-22rem"
+        list-style="max-height:300px"
+      >
         <template #option="slotProps">
           <NuxtLink
             :to="`/${slotProps.option.link}?key=${slotProps.option.keyQuery}`"
-            ><Button :label="slotProps.option.label" link
+            ><Button :label="slotProps.option.label" link class="text-left"
           /></NuxtLink>
         </template>
       </Listbox>
