@@ -16,6 +16,7 @@ The app currently supports the following flows:
 
 - **Authorization code** (including the token`response type`)
 - **Refresh token**
+- **PKCE**
 
 ### Instructions
 
