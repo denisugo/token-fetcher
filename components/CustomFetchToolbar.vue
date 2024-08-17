@@ -2,13 +2,12 @@
 const { fetchTokens, saveCredentials } = defineProps<{
   isFetchDisabled: boolean;
   isSaveDisabled: boolean;
-  fetchTokens: () => Promise<void>;
+  fetchTokens: (finishLoading: () => void) => Promise<void>;
   saveCredentials: () => Promise<void>;
 }>();
 
 const loadingFetch = ref(false);
 const loadingFetchAndSave = ref(false);
-
 const [loading, setLoading] = useLoadingState();
 watch([loadingFetch, loadingFetchAndSave], (newLoadings) =>
   setLoading(newLoadings[0] || newLoadings[1]),
@@ -17,14 +16,12 @@ watch([loadingFetch, loadingFetchAndSave], (newLoadings) =>
 async function fetchAndSaveWithLoading() {
   loadingFetchAndSave.value = true;
   await saveCredentials();
-  await fetchTokens();
-  loadingFetchAndSave.value = false;
+  await fetchTokens(() => (loadingFetchAndSave.value = false));
 }
 
 async function fetchOnlyWithLoading() {
   loadingFetch.value = true;
-  await fetchTokens();
-  loadingFetch.value = false;
+  await fetchTokens(() => (loadingFetch.value = false));
 }
 </script>
 

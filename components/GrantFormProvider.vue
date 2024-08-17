@@ -3,7 +3,7 @@ defineProps<{
   grantName: string;
   isFetchDisabled: boolean;
   isSaveDisabled: boolean;
-  fetchTokens: () => Promise<void>;
+  fetchTokens: (finishLoading: () => void) => Promise<void>;
   saveCredentials: () => Promise<void>;
   deleteCredentials: () => Promise<void>;
 }>();

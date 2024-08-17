@@ -37,7 +37,7 @@ const isFetchDisabled = computed(
     !clientSecret.value,
 );
 
-async function fetchTokens() {
+async function fetchTokens(finishLoading: () => void) {
   const authorization = stringToBase64(
     `${clientId.value}:${clientSecret.value}`,
   );
@@ -58,10 +58,12 @@ async function fetchTokens() {
         timeout: 3000,
       });
 
+    finishLoading();
     await navigateTo(
       `/tokens?${buildQueryForTokens(access_token, id_token, refresh_token)}`,
     );
   } catch (e) {
+    finishLoading();
     showError((e as Error).message);
   }
 }

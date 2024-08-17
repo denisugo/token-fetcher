@@ -73,7 +73,8 @@ async function saveCredentials() {
   );
 }
 
-async function fetchTokens() {
+async function fetchTokens(_finishLoading: () => void) {
+  // The finishLoading functions is not required to be called here as the whole page is going to be reloaded
   await supplyBody(
     async (body) =>
       await $fetch<never>("/api/pkce/credentials/callback", {
