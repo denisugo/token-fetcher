@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { data: keys } = await useFetch("/api/credentials/all-credential-keys");
+const { data: keys } = await useFetch("/api/all-credential-keys");
 const displayReadyKeys = computed(() =>
   keys.value
     ?.map((key) => {
