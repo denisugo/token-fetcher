@@ -32,7 +32,7 @@ const clientSecret = ref(initialValues?.value?.clientSecret ?? "");
 const currentUrl = useRequestURL();
 const callbackEndpoint = computed(
   () =>
-    `${currentUrl.protocol}//${currentUrl.host}/${responseType.value === "code" ? "api/callback" : "tokens"}`,
+    `${currentUrl.protocol}//${currentUrl.host}/${responseType.value === "code" ? "api/authorization-code/callback" : "tokens"}`,
 );
 
 const fullAuthEndpoint = computed(() => {
@@ -73,7 +73,7 @@ async function saveCredentials() {
   await supplyBody(
     async (body) =>
       await $fetch<unknown>(
-        `/api/credentials/authorization-code/${stringToBase64(title.value)}`,
+        `/api/authorization-code/credentials/${stringToBase64(title.value)}`,
         {
           method: "POST",
           body,
@@ -84,7 +84,7 @@ async function saveCredentials() {
 async function fetchTokens() {
   await supplyBody(
     async (body) =>
-      await $fetch<unknown>("/api/credentials/authorization-code/callback", {
+      await $fetch<unknown>("/api/authorization-code/credentials/callback", {
         method: "POST",
         body,
       }),
@@ -94,7 +94,7 @@ async function fetchTokens() {
 
 async function deleteCredentials() {
   await $fetch<unknown>(
-    `/api/credentials/authorization-code/${stringToBase64(title.value)}`,
+    `/api/authorization-code/credentials/${stringToBase64(title.value)}`,
     {
       method: "DELETE",
     },

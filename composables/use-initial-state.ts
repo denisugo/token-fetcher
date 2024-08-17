@@ -5,7 +5,7 @@ export default async function <T>(grantType: GrantType) {
   if (query.key) {
     return {
       initialValues: (
-        await useFetch(`/api/credentials/${grantType}/${query.key}`)
+        await useFetch(`/api/${grantType}/credentials/${query.key}`)
       ).data as globalThis.Ref<T | null>,
       key: base64ToString(query.key as string),
     };
