@@ -7,5 +7,11 @@ const { copy } = useClipboard({ source });
 </script>
 
 <template>
-  <Button icon="pi pi-clipboard" label="copy" class="w-6rem" @click="copy()" />
+  <Button
+    icon="pi pi-clipboard"
+    severity="secondary"
+    label="copy"
+    class="w-6rem"
+    @click="copy()"
+  />
 </template>
