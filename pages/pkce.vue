@@ -63,7 +63,7 @@ async function supplyBody(
 async function saveCredentials() {
   await supplyBody(
     async (body) =>
-      await $fetch<unknown>(
+      await $fetch<never>(
         `/api/pkce/credentials/${stringToBase64(title.value)}`,
         {
           method: "POST",
@@ -76,7 +76,7 @@ async function saveCredentials() {
 async function fetchTokens() {
   await supplyBody(
     async (body) =>
-      await $fetch<unknown>("/api/pkce/credentials/callback", {
+      await $fetch<never>("/api/pkce/credentials/callback", {
         method: "POST",
         body,
       }),

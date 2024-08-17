@@ -72,7 +72,7 @@ async function saveCredentials() {
     tokenEndpoint: tokenEndpoint.value,
     refreshToken: refreshToken.value,
   };
-  await $fetch(
+  await $fetch<never>(
     `/api/refresh-token/credentials/${stringToBase64(title.value)}`,
     {
       method: "POST",
@@ -82,7 +82,7 @@ async function saveCredentials() {
 }
 
 async function deleteCredentials() {
-  await $fetch<unknown>(
+  await $fetch<never>(
     `/api/refresh-token/credentials/${stringToBase64(title.value)}`,
     {
       method: "DELETE",

@@ -72,7 +72,7 @@ async function supplyBody(
 async function saveCredentials() {
   await supplyBody(
     async (body) =>
-      await $fetch<unknown>(
+      await $fetch<never>(
         `/api/authorization-code/credentials/${stringToBase64(title.value)}`,
         {
           method: "POST",
@@ -84,7 +84,7 @@ async function saveCredentials() {
 async function fetchTokens() {
   await supplyBody(
     async (body) =>
-      await $fetch<unknown>("/api/authorization-code/credentials/callback", {
+      await $fetch<never>("/api/authorization-code/credentials/callback", {
         method: "POST",
         body,
       }),
@@ -93,7 +93,7 @@ async function fetchTokens() {
 }
 
 async function deleteCredentials() {
-  await $fetch<unknown>(
+  await $fetch<never>(
     `/api/authorization-code/credentials/${stringToBase64(title.value)}`,
     {
       method: "DELETE",
