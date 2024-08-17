@@ -124,7 +124,12 @@ async function deleteCredentials() {
       </div>
       <div class="flex flex-column gap-2 w-full">
         <label for="calback-url"> callback url</label>
-        <InputText id="calback-url" :value="callbackEndpoint" disabled />
+        <div class="flex flex-row gap-2 w-full">
+          <div class="flex flex-column flex-grow-1">
+            <InputText id="calback-url" :value="callbackEndpoint" disabled />
+          </div>
+          <CopyButton :source="callbackEndpoint" />
+        </div>
       </div>
       <div class="flex flex-column gap-2 w-full">
         <label for="scope">scope</label>
